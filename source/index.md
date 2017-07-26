@@ -3,10 +3,9 @@ title: UsrCloud.dll 用户手册
 
 language_tabs:
 
-  - pascal
   - csharp
+  - pascal
   - cpp
-  - vb
 
 toc_footers:
   - 版本  :1.0
@@ -31,7 +30,10 @@ search: true
 function USR_GetVer: LongInt; stdcall; external 'UsrCloud.dll';
 ```
 ```csharp
-
+[DllImport("UsrCloud.dll", CharSet = CharSet.Auto, 
+    EntryPoint = "USR_GetVer",
+    CallingConvention = CallingConvention.StdCall)]
+public static extern int USR_GetVer();
 ```
 ```cpp
 
@@ -45,7 +47,7 @@ function USR_GetVer: LongInt; stdcall; external 'UsrCloud.dll';
 Writeln('dll版本号:' + IntToStr(USR_GetVer));
 ```
 ```csharp
-
+Log("dll版本号: " + USR_GetVer().ToString());
 ```
 ```cpp
 
@@ -71,7 +73,10 @@ function USR_Init(Host: PWideChar; Port: Word; Ver: LongInt): Boolean;
 stdcall; external 'UsrCloud.dll';
 ```
 ```csharp
-
+[DllImport("UsrCloud.dll", CharSet = CharSet.Auto, 
+    EntryPoint = "USR_Init", 
+    CallingConvention = CallingConvention.StdCall)]
+public static extern bool USR_Init(string host, ushort port, int vertion);
 ```
 ```cpp
 
@@ -88,7 +93,10 @@ begin
 end;
 ```
 ```csharp
-
+if (USR_Init("clouddata.usr.cn", 1883, 1))
+{
+   /* 初始化成功, 一般在这里设置回调函数 */
+}
 ```
 ```cpp
 
@@ -118,7 +126,10 @@ boolean| 成功返回 true ,失败返回 false
 function USR_Release(): Boolean; stdcall; external 'UsrCloud.dll';
 ```
 ```csharp
-
+[DllImport("UsrCloud.dll", CharSet = CharSet.Auto, 
+    EntryPoint = "USR_Release", 
+    CallingConvention = CallingConvention.StdCall)]
+public static extern bool USR_Release();
 ```
 ```cpp
 
@@ -135,7 +146,10 @@ begin
 end;
 ```
 ```csharp
-
+if(USR_Release())
+{
+    Log("释放成功");
+}
 ```
 ```cpp
 
@@ -160,11 +174,21 @@ boolean| 成功返回 true ,失败返回 false
 > USR_OnConnAck 设置 连接响应 回调函数 声明:
 
 ```pascal
+TUSR_ConnAckEvent = procedure(ReturnCode: LongInt;
+  Description: PWideChar); stdcall;
+```
+```pascal
 function USR_OnConnAck(OnConnAct: TUSR_ConnAckEvent): Boolean; 
 stdcall; external 'UsrCloud.dll';
 ```
 ```csharp
-
+public delegate void TUSR_ConnAckEvent(int returnCode, IntPtr description);
+```
+```csharp
+[DllImport("UsrCloud.dll", CharSet = CharSet.Auto, 
+    EntryPoint = "USR_OnConnAck", 
+    CallingConvention = CallingConvention.StdCall)]
+public static extern bool USR_OnConnAck(TUSR_ConnAckEvent OnConnAck);
 ```
 ```cpp
 
@@ -174,7 +198,7 @@ stdcall; external 'UsrCloud.dll';
 ```
 > 调用,一般在USR_Init执行成功之后调用 
 
-```pascal  
+```pascal
 { 自定义回调函数,用于判断是否连接成功 }
 procedure ConnAck_CBF(ReturnCode: Integer; Description: PWideChar);
 var
@@ -189,11 +213,33 @@ begin
   vs := Description;
   Writeln('ReturnCode:' + IntToStr(ReturnCode) + ' ;' + vs);
 end;
-  
+```
+```pascal
+{ 注册回调函数 }
 USR_OnConnAck(ConnAck_CBF);
 ```
 ```csharp
-
+/* 自定义回调函数,用于判断是否连接成功 */
+private void ConnAck_CBF(int returnCode, IntPtr description)
+{
+    Log("【连接回调】");
+    Log("returnCode: " + returnCode.ToString() + "  " + 
+      Marshal.PtrToStringAuto(description));
+    if (returnCode==0)
+    {
+        Log("连接成功");
+    }
+    else
+    {
+        Log("连接失败");
+    }
+}
+```
+```csharp
+TUSR_ConnAckEvent FConnAck_CBF;
+FConnAck_CBF = new TUSR_ConnAckEvent(ConnAck_CBF);
+/* 注册回调函数 */
+USR_OnConnAck(FConnAck_CBF);
 ```
 ```cpp
 
@@ -253,7 +299,10 @@ function USR_Connect(Username, Password: PWideChar): Boolean;
 stdcall; external 'UsrCloud.dll';
 ```
 ```csharp
-
+[DllImport("UsrCloud.dll", CharSet = CharSet.Auto, 
+    EntryPoint = "USR_Connect", 
+    CallingConvention = CallingConvention.StdCall)]
+public static extern bool USR_Connect(string Username, string Password);
 ```
 ```cpp
 
@@ -270,7 +319,10 @@ begin
 end;
 ```
 ```csharp
-
+if (USR_Connect("sdktest", "sdktest"))
+{
+    Log("连接已发起");
+}
 ```
 ```cpp
 
@@ -301,7 +353,10 @@ function USR_DisConnect(): Boolean; stdcall; external 'UsrCloud.dll';
 ```
 
 ```csharp
-
+[DllImport("UsrCloud.dll", CharSet = CharSet.Auto, 
+    EntryPoint = "USR_DisConnect", 
+    CallingConvention = CallingConvention.StdCall)]
+public static extern bool USR_DisConnect();
 ```
 ```cpp
 
@@ -318,7 +373,10 @@ begin
 end;
 ```
 ```csharp
-
+if (USR_DisConnect())
+{
+    Log("已断开");
+}
 ```
 ```cpp
 
@@ -343,12 +401,22 @@ boolean| 成功返回 true ,失败返回 false
 > USR_OnSubAck 设置 订阅响应 回调函数 声明:
 
 ```pascal
+TUSR_SubAckEvent = procedure(MessageID: LongInt;
+  DevId, ReturnCode: PWideChar); stdcall;
+```
+```pascal
 function USR_OnSubAck(OnSubAck: TUSR_SubAckEvent): Boolean; 
 stdcall; external 'UsrCloud.dll';
 ```
-
 ```csharp
-
+public delegate void TUSR_SubAckEvent(int messageID, 
+    IntPtr devId, IntPtr returnCode);
+```
+```csharp
+[DllImport("UsrCloud.dll", CharSet = CharSet.Auto, 
+    EntryPoint = "USR_OnSubAck", 
+    CallingConvention = CallingConvention.StdCall)]
+public static extern bool USR_OnSubAck(TUSR_SubAckEvent OnSubAck);
 ```
 ```cpp
 
@@ -374,11 +442,34 @@ begin
      WideCharToString(ReturnCode)]);
   Writeln(vsHint);
 end;
-  
+```
+```pascal
+{ 注册回调函数 }
 USR_OnSubAck(SubAck_CBF);
 ```
 ```csharp
+/* 自定义回调函数,用于判断订阅结果 */
+private void SubAck_CBF(int messageID, IntPtr devId, IntPtr returnCode)
+{
+    string sDevId= Marshal.PtrToStringAuto(devId);
+    string sReturnCode = Marshal.PtrToStringAuto(returnCode); 
+    string[] devIdArray = sDevId.Split(',');
+    string[] retCodeArray = sReturnCode.Split(',');
+    int len = devIdArray.Length;
 
+    Log("【订阅回调】");
+    Log("MsgId:" + messageID.ToString());
+    for (int i = 0; i < len; ++i)
+    {
+        Log("设备：" + devIdArray[i] + "  订阅结果：" + retCodeArray[i]);
+    }
+}
+```
+```csharp
+TUSR_SubAckEvent FSubAck_CBF;
+FSubAck_CBF = new TUSR_SubAckEvent(SubAck_CBF);
+/* 注册回调函数 */
+USR_OnSubAck(FSubAck_CBF);
 ```
 ```cpp
 
@@ -434,7 +525,10 @@ function USR_Subscribe(DevId: PWideChar): LongInt;
 stdcall; external 'UsrCloud.dll';
 ```
 ```csharp
-
+[DllImport("UsrCloud.dll", CharSet = CharSet.Auto, 
+    EntryPoint = "USR_Subscribe", 
+    CallingConvention = CallingConvention.StdCall)]
+public static extern int USR_Subscribe(string devId);
 ```
 ```cpp
 
@@ -460,7 +554,18 @@ begin
 end;
 ```
 ```csharp
-
+int iMsgId = USR_Subscribe("00000000000000000001");
+if(iMsgId > -1)
+{
+    Log("订阅设备00000000000000000001 已发起");  
+}
+```
+```csharp
+int iMsgId = USR_Subscribe("");
+if(iMsgId > -1)
+{
+    Log("订阅所有设备 已发起");  
+}
 ```
 ```cpp
 
@@ -486,11 +591,21 @@ boolean|失败返回: -1 ;<br>成功返回: 消息ID,收到消息ID只是说明�
 > USR_OnUnSubAck 设置 取消订阅响应回调函数 声明:
 
 ```pascal
+TUSR_UnSubAckEvent = procedure(MessageID: LongInt; 
+  DevId: PWideChar); stdcall;
+```
+```pascal
 function USR_OnUnSubAck(OnUnSubAck: TUSR_UnSubAckEvent): Boolean; 
 stdcall; external 'UsrCloud.dll';
 ```
 ```csharp
-
+public delegate void TUSR_UnSubAckEvent(int messageID, IntPtr devId);
+```
+```csharp
+[DllImport("UsrCloud.dll", CharSet = CharSet.Auto, 
+    EntryPoint = "USR_OnUnSubAck", 
+    CallingConvention = CallingConvention.StdCall)]
+public static extern bool USR_OnUnSubAck(TUSR_UnSubAckEvent OnUnSubAck);
 ```
 ```cpp
 
@@ -512,11 +627,26 @@ begin
     [MessageID, WideCharToString(DevId)]);
   Writeln(vsHint);
 end;
-  
+```
+```pascal
+{ 注册回调函数 }
 USR_OnUnSubAck(UnSubAck_CBF);
 ```
 ```csharp
-
+/* 自定义回调函数 */
+private void UnSubAck_CBF(int messageID, IntPtr devId)
+{
+    string sDevId = Marshal.PtrToStringAuto(devId);
+    Log("【取消订阅回调】");
+    Log("MsgId:" + messageID.ToString());
+    Log("设备：" + sDevId);
+}
+```
+```csharp
+TUSR_UnSubAckEvent FUnSubAck_CBF;
+FUnSubAck_CBF = new TUSR_UnSubAckEvent(UnSubAck_CBF);
+/* 注册回调函数 */
+USR_OnUnSubAck(FUnSubAck_CBF);
 ```
 ```cpp
 
@@ -561,7 +691,10 @@ function USR_UnSubscribe(DevId: PWideChar): LongInt;
 stdcall; external 'UsrCloud.dll';
 ```
 ```csharp
-
+[DllImport("UsrCloud.dll", CharSet = CharSet.Auto, 
+    EntryPoint = "USR_UnSubscribe", 
+    CallingConvention = CallingConvention.StdCall)]
+public static extern int USR_UnSubscribe(string devId);
 ```
 ```cpp
 
@@ -587,7 +720,18 @@ begin
 end;
 ```
 ```csharp
-
+int iMsgId = USR_UnSubscribe("00000000000000000001");
+if(iMsgId > -1)
+{
+    Log("取消订阅设备00000000000000000001 已发起");  
+}
+```
+```csharp
+int iMsgId = USR_UnSubscribe("");
+if(iMsgId > -1)
+{
+    Log("取消订阅所有设备 已发起");  
+}
 ```
 ```cpp
 
@@ -616,11 +760,20 @@ boolean|失败返回: -1 ;<br>成功返回: 消息ID,收到消息ID只是说明�
 > USR_OnPubAck 设置 推送响应 回调函数 声明:
 
 ```pascal
+TUSR_PubAckEvent = procedure(MessageID: LongInt); stdcall;
+```
+```pascal
 function USR_OnPubAck(OnPubAck: TUSR_PubAckEvent): Boolean; 
 stdcall; external 'UsrCloud.dll';
 ```
 ```csharp
-
+public delegate void TUSR_PubAckEvent(int MessageID);
+```
+```csharp
+[DllImport("UsrCloud.dll", CharSet = CharSet.Auto, 
+    EntryPoint = "USR_OnPubAck", 
+    CallingConvention = CallingConvention.StdCall)]
+public static extern bool USR_OnPubAck(TUSR_PubAckEvent OnPubAck);
 ```
 ```cpp
 
@@ -636,11 +789,24 @@ procedure PubAck_CBF(MessageID: Integer);
 begin
   Writeln('收到推送确认,MessageID: ' + IntToStr(MessageID));
 end;
-  
+```
+```pascal
+{ 注册回调函数 }
 USR_OnPubAck(PubAck_CBF);
 ```
 ```csharp
-
+/* 自定义回调函数,用于判断是否推送成功 */
+protected void PubAck_CBF(int messageID)
+{
+    Log("【推送回调】");
+    Log("MsgId:" + messageID.ToString());
+}
+```
+```csharp
+TUSR_PubAckEvent FPubAck_CBF;
+FPubAck_CBF = new TUSR_PubAckEvent(PubAck_CBF);
+/* 注册回调函数 */
+USR_OnPubAck(FPubAck_CBF);
 ```
 ```cpp
 
@@ -683,7 +849,11 @@ function USR_Publish(DevId: PWideChar; pData: PByte; DataLen: Integer)
   : LongInt; stdcall; external 'UsrCloud.dll';
 ```
 ```csharp
-
+[DllImport("UsrCloud.dll", CharSet = CharSet.Auto, 
+    EntryPoint = "USR_Publish", 
+    CallingConvention = CallingConvention.StdCall)]
+public static extern int USR_Publish(string DevId, 
+    byte[] pData, int DataLen);
 ```
 ```cpp
 
@@ -708,7 +878,14 @@ begin
 end;
 ```
 ```csharp
-
+byte[] byteArray = new byte[] { 0x01, 0x02, 0x03 };
+int iMsgId = USR_Publish("00000000000000000001", 
+                         byteArray, 
+                         byteArray.Length);
+if (iMsgId > -1) 
+{
+    Log("消息已推送 MsgId:" + iMsgId.ToString());
+}
 ```
 ```cpp
 
@@ -738,11 +915,22 @@ boolean|失败返回: -1 ;<br>成功返回: 消息ID。
 > USR_OnRcv 设置 收到数据 回调函数 声明:
 
 ```pascal
+TUSR_RcvEvent = procedure(MessageID: LongInt; DevId: PWideChar;
+  pData: PByte; DataLen: Integer); stdcall;
+```
+```pascal
 function USR_OnRcv(OnRcv: TUSR_RcvEvent): Boolean; 
 stdcall; external 'UsrCloud.dll';
 ```
 ```csharp
-
+public delegate void TUSR_OnRcvEvent(int MessageID, 
+    IntPtr DevId, IntPtr pData, int DataLen);
+```
+```csharp
+[DllImport("UsrCloud.dll", CharSet = CharSet.Auto, 
+    EntryPoint = "USR_OnRcv", 
+    CallingConvention = CallingConvention.StdCall)]
+public static extern bool USR_OnRcv(TUSR_OnRcvEvent OnRcvEvent);
 ```
 ```cpp
 
@@ -771,11 +959,30 @@ begin
 
   Writeln(vsHint);
 end;
-  
+```
+```pascal
+{ 注册回调函数 }
 USR_OnRcv(Rcv_CBF);
 ```
 ```csharp
-
+/* 自定义回调函数,用于处理接收的数据 */
+private void Rcv_CBF(int messageID, IntPtr devId, IntPtr pData, int DataLen)
+{
+    string sDevId = Marshal.PtrToStringAuto(devId);
+    byte[] byteArr = new byte[DataLen];
+    Marshal.Copy(pData, byteArr, 0, DataLen);
+    string sHex = BitConverter.ToString(byteArr).Replace("-", " ");
+    Log("【接收回调】");
+    Log("设备ID   : " + sDevId);
+    Log("MsgId    : " + messageID.ToString());
+    Log("接收数据(Hex): " + sHex);
+}
+```
+```csharp
+TUSR_OnRcvEvent FRcv_CBF;
+FRcv_CBF = new TUSR_OnRcvEvent(Rcv_CBF);
+/* 注册回调函数 */
+USR_OnRcv(FRcv_CBF);
 ```
 ```cpp
 
