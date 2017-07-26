@@ -82,7 +82,7 @@ stdcall; external 'UsrCloud.dll';
 > 调用,一般在窗口创建时调用 
 
 ```pascal
-if USR_Init(PWideChar('cloudapp.usr.cn'), 1883, 1) then
+if USR_Init(PWideChar('clouddata.usr.cn'), 1883, 1) then
 begin
    { 初始化成功, 一般在这里设置回调函数 }
 end;
@@ -102,7 +102,7 @@ end;
 
 参数| 描述
 ---- | ----
-Host|[in] 透传云服务器地址 cloudapp.usr.cn
+Host|[in] 透传云服务器地址 clouddata.usr.cn
 Port|[in] 端口 1883
 Ver |[in] 指定你想使用的版本号,必须 <= 函数**USR_GetVer**查询到的最高版本号,目前只能填 1。
 
@@ -264,7 +264,7 @@ stdcall; external 'UsrCloud.dll';
 > 调用
 
 ```pascal
-if USR_Connect(PWideChar('testuser'),PWideChar('testuser')) then
+if USR_Connect(PWideChar('sdktest'),PWideChar('sdktest')) then
 begin
   { 连接已发起,请在USR_OnConnAck设置的回调函数中判断连接结果 }
 end;
