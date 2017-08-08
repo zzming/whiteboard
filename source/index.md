@@ -9,7 +9,7 @@ language_tabs:
 
 toc_footers:
   - 版本  :1.0
-  - 日期  :2017-7-17
+  - 日期  :2017-7-26
   - <a href='http://cloud.usr.cn'>有人透传云</a>
 
 search: true
@@ -17,6 +17,28 @@ search: true
 
 # 快速上手
 
+### 函数调用流程
+
+1. **准备工作**
+    USR_Init       : 初始化 , 创建实例。
+    USR\_OnXXXXXX  : 注册回调函数 , 在 USR\_Init 后执行。
+    USR_Connect    : 连接服务器。
+2. **通讯**
+    USR_Subscribe  : 订阅。告诉服务器, 想接收哪些设备的数据。
+    USR_Publish    : 推送。向设备发送数据。
+3. **收尾工作**
+    USR_DisConnect : 断开与服务器的连接。
+    USR_Release    : 释放资源。程序结束前 , 务必调用此方法。
+
+### 回调函数用法
+  
+&emsp;以 [  USR_OnConnAck  ](#Define_USR_OnConnAck) 举例 , 其他回调函数类似
+
+&emsp;| 说明 | 举例
+---- | ---- | ----
+  1  | 用户需要按照回调函数定义 , 自定义回调函数 | 按照 [ TUSR_ConnAckEvent 定义 ](#Define_TUSR_ConnAckEvent) , 写回调函数<br>ConnAck\_CBF( long ReturnCode , LPCWSTR Description )<br>（参见右侧示例代码或 Demo ） 
+  2  | 用dll提供的USR\_OnXXXXXX方法 , 将回调函数地址传给dll | 执行  USR_OnConnAck(ConnAck\_CBF)
+  3  | 当事件发生时 , 会触发用户写的回调函数 | 执行 USR\_Connect 连接服务器 , 会收到服务器的反馈 , 触发 ConnAck\_CBF , 通过 ReturnCode 参数 , 可判断是否连接成功。
   
 # 接口说明
 
@@ -169,6 +191,7 @@ boolean| 成功返回 true ,失败返回 false
 
 ## --------- 连接和断开 ---------
 
+<span id = "Define_USR_OnConnAck"></span>
 ## <aside>USR_OnConnAck 设置 连接响应 回调函数</aside>
 
 > USR_OnConnAck 设置 连接响应 回调函数 声明:
@@ -1026,4 +1049,4 @@ DataLen|[out] 数据长度
 
 版本 | 日期 | 更新内容 | 更新人
 ---- | ---- | ---- | ----
-1.0 | 2017-7-17 | 初版 | 张振鸣
+1.0 | 2017-7-26 | 初版 | 张振鸣
