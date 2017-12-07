@@ -9,7 +9,7 @@ language_tabs:
 
 toc_footers:
   - 版本  :1.1.0
-  - 日期  :2017-12-6
+  - 日期  :2017-12-7
   - <a href='http://cloud.usr.cn'>有人透传云</a>
   - <style>.fwb{font-weight:bold;}</style>
   - <style>a{ text-decoration:none}</style>
@@ -23,7 +23,7 @@ search: true
 
 1. **准备工作**
     + USR_Init       : 初始化 , 创建实例。
-    + USR\_OnXXXXXX  : 注册回调函数 , 在 USR\_Init 后执行。
+    + USR_OnXXXXXX  : 注册回调函数 , 在 USR_Init 后执行。
     + USR_Connect    : 连接服务器。
 2. **通讯**
     + USR_Subscribe  : 订阅。告诉服务器, 想接收哪些设备的数据。
@@ -38,15 +38,15 @@ search: true
 
 &emsp;| 说明 | 举例
 ---- | ---- | ----
-  1  | 用户需要按照回调函数定义 , 自定义回调函数 | 按照 [ TUSR_ConnAckEvent 定义 ](#Define_TUSR_ConnAckEvent) , 写回调函数<br>ConnAck\_CBF( long ReturnCode , LPCWSTR Description )<br>（参见右侧示例代码或 Demo ） 
-  2  | 用dll提供的USR\_OnXXXXXX方法 , 将回调函数地址传给dll | 执行  USR_OnConnAck(ConnAck\_CBF)
-  3  | 当事件发生时 , 会触发用户写的回调函数 | 执行 USR\_Connect 连接服务器 , 会收到服务器的反馈 , 触发 ConnAck\_CBF , 通过 ReturnCode 参数 , 可判断是否连接成功。
+  1  | 用户需要按照回调函数定义 , 自定义回调函数 | 按照 [ TUSR_ConnAckEvent 定义 ](#Define_TUSR_ConnAckEvent) , 写回调函数<br>ConnAck_CBF( long ReturnCode , LPCWSTR Description )<br>（参见右侧示例代码或 Demo ） 
+  2  | 用dll提供的USR_OnXXXXXX方法 , 将回调函数地址传给dll | 执行  USR_OnConnAck(ConnAck_CBF)
+  3  | 当事件发生时 , 会触发用户写的回调函数 | 执行 USR_Connect 连接服务器 , 会收到服务器的反馈 , 触发 ConnAck_CBF , 通过 ReturnCode 参数 , 可判断是否连接成功。
 
 # 接口说明
 
 ## 函数汇总
 
-<table border="1" frame=vsides bordercolor="#8FBCD4" align="center">    <tr>        <td colspan="2" align="center" bgcolor="#8FBCD4"><b>功能说明</b></td><td align="center" bgcolor="#8FBCD4" width="5%"><b>云交换机</b>            <br>操作原始数据</td><td align="center" bgcolor="#8FBCD4" width="5%"><b>云组态</b>            <br>操作解析后的数据</td>    </tr><tr>        <td rowspan="3" align="center">初始化和释放</td><td>获取版本号</td><td colspan="2" align="center"><a href="#USR-GetVer-获取dll版本" class="fwb">USR_GetVer</a></td>    </tr><tr>        <td>初始化</td><td colspan="2" align="center"><a href="#USR-Init-初始化接口" class="fwb">USR_Init</a></td>    </tr><tr>        <td>释放</td><td colspan="2" align="center"><a href="#USR-Release-释放接口" class="fwb">USR_Release</a></td>    </tr><tr>        <td rowspan="3" align="center">连接和断开</td><td>连接回调</td><td colspan="2" align="center"><a href="#USR-OnConnAck-设置-连接响应回调函数" class="fwb">USR_OnConnAck</a></td>    </tr><tr>        <td>连接</td><td colspan="2" align="center"><a href="#USR-Connect-连接" class="fwb">USR_Connect</a></td>    </tr><tr>        <td>断开</td><td colspan="2" align="center"><a href="#USR-DisConnect-断开连接" class="fwb">USR_DisConnect</a></td>    </tr><tr>        <td rowspan="6" align="center">订阅和取消订阅</td><td>订阅回调</td><td colspan="2" align="center"><a href="#USR-OnSubscribeAck-设置-订阅响应回调函数" class="fwb">USR_OnSubscribeAck</a></td>    </tr><tr>        <td>订阅设备数据</td><td align="center"><a href="#USR-SubscribeDevRaw-订阅单个设备原始数据流" class="fwb">USR_SubscribeDevRaw</a></td><td align="center"><a href="#USR-SubscribeDevParsed-订阅单个设备解析后的数据" class="fwb">USR_SubscribeDevParsed</a></td>    </tr><tr>        <td>订阅账户下所有设备数据</td><td align="center"><a href="#USR-SubscribeUserRaw-订阅账户下所有设备原始数据流" class="fwb">USR_SubscribeUserRaw</a></td><td align="center"><a href="#USR-SubscribeUserParsed-订阅账户下所有设备解析后的数据" class="fwb">USR_SubscribeUserParsed</a></td>    </tr><tr>        <td>取消订阅回调</td><td colspan="2" align="center"><a href="#USR-OnUnSubscribeAck-设置-取消订阅响应回调函数" class="fwb">USR_OnUnSubscribeAck</a></td>    </tr><tr>        <td>取消订阅设备数据</td><td align="center"><a href="#USR-UnSubscribeDevRaw-取消订阅单个设备原始数据流" class="fwb">USR_UnSubscribeDevRaw</a></td><td align="center"><a href="#USR-UnSubscribeDevParsed-取消订阅单个设备解析后的数据" class="fwb">USR_UnSubscribeDevParsed</a></td>    </tr><tr>        <td>取消订阅账户下所有设备数据</td><td align="center"><a href="#USR-UnSubscribeUserRaw-取消订阅账户下所有设备原始数据流" class="fwb">USR_UnSubscribeUserRaw</a></td><td align="center"><a href="#USR-UnSubscribeUserParsed-取消订阅账户下所有设备解析后的数据" class="fwb">USR_UnSubscribeUserParsed</a></td>    </tr><tr>        <td rowspan="2" align="center">推送数据</td><td>推送回调</td><td colspan="2" align="center"><a href="#USR-OnPubAck-设置-推送响应回调函数" class="fwb">USR_OnPubAck</a></td>    </tr><tr>        <td>推送数据</td><td align="center"><a href="#USR-PublishRawToDev-向单台设备推送原始数据流" class="fwb">USR_PublishRawToDev</a>            <br align="center"><a href="#USR-PublishRawToUser-向账户下所有设备推送原始数据流" class="fwb">USR_PublishRawToUser</a></td><td align="center"><a href="#USR-PublishParsedSetDataPoint-设置单台设备数据点值" class="fwb">USR_PublishParsedSetDataPoint</a>            <br align="center"><a href="#USR-PublishParsedQueryDataPoint-查询单台设备数据点值" class="fwb">USR_PublishParsedQueryDataPoint</a></td>    </tr><tr>        <td colspan="1" align="center">接收数据</td><td>接收数据</td><td align="center"><a href="#USR-OnRcvRawFromDev-设置-接收设备原始数据流回调函数" class="fwb">USR_OnRcvRawFromDev</a></td><td align="center"><a href="#USR-OnRcvParsedDataPointPush-设置-接收设备数据点值推送回调函数" class="fwb">USR_OnRcvParsedDataPointPush</a>            <br align="center"><a href="#USR-OnRcvParsedDevStatusPush-设置-接收设备上下线推送回调函数" class="fwb">USR_OnRcvParsedDevStatusPush</a>            <br align="center"><a href="#USR-OnRcvParsedDevAlarmPush-设置-接收设备报警推送回调函数" class="fwb">USR_OnRcvParsedDevAlarmPush</a>            <br align="center"><a href="#USR-OnRcvParsedOptionResponseReturn-设置-接收设备数据点操作应答回调函数" class="fwb">USR_OnRcvParsedOptionResponseReturn</a></td>    </tr></table>
+<table border="1" frame=vsides bordercolor="#8FBCD4" align="center">    <tr>        <td colspan="2" align="center"><b>功能说明</b></td><td align="center"><b>云交换机</b>            <br>操作原始数据</td><td align="center"><b>云组态</b>            <br>操作解析后的数据</td>    </tr><tr>        <td rowspan="3" align="center">初始化和释放</td><td>获取版本号</td><td colspan="2" align="center"><a href="#USR-GetVer-获取dll版本" class="fwb">USR_GetVer</a></td>    </tr><tr>        <td>初始化</td><td colspan="2" align="center"><a href="#USR-Init-初始化接口" class="fwb">USR_Init</a></td>    </tr><tr>        <td>释放</td><td colspan="2" align="center"><a href="#USR-Release-释放接口" class="fwb">USR_Release</a></td>    </tr><tr>        <td rowspan="3" align="center">连接和断开</td><td>连接回调</td><td colspan="2" align="center"><a href="#USR-OnConnAck-设置-连接响应回调函数" class="fwb">USR_OnConnAck</a></td>    </tr><tr>        <td>连接</td><td colspan="2" align="center"><a href="#USR-Connect-连接" class="fwb">USR_Connect</a></td>    </tr><tr>        <td>断开</td><td colspan="2" align="center"><a href="#USR-DisConnect-断开连接" class="fwb">USR_DisConnect</a></td>    </tr><tr>        <td rowspan="6" align="center">订阅和取消订阅</td><td>订阅回调</td><td colspan="2" align="center"><a href="#USR-OnSubscribeAck-设置-订阅响应回调函数" class="fwb">USR_OnSubscribeAck</a></td>    </tr><tr>        <td>订阅设备数据</td><td align="center"><a href="#USR-SubscribeDevRaw-订阅单个设备原始数据流" class="fwb">USR_SubscribeDevRaw</a></td><td align="center"><a href="#USR-SubscribeDevParsed-订阅单个设备解析后的数据" class="fwb">USR_SubscribeDevParsed</a></td>    </tr><tr>        <td>订阅账户下所有设备数据</td><td align="center"><a href="#USR-SubscribeUserRaw-订阅账户下所有设备原始数据流" class="fwb">USR_SubscribeUserRaw</a></td><td align="center"><a href="#USR-SubscribeUserParsed-订阅账户下所有设备解析后的数据" class="fwb">USR_SubscribeUserParsed</a></td>    </tr><tr>        <td>取消订阅回调</td><td colspan="2" align="center"><a href="#USR-OnUnSubscribeAck-设置-取消订阅响应回调函数" class="fwb">USR_OnUnSubscribeAck</a></td>    </tr><tr>        <td>取消订阅设备数据</td><td align="center"><a href="#USR-UnSubscribeDevRaw-取消订阅单个设备原始数据流" class="fwb">USR_UnSubscribeDevRaw</a></td><td align="center"><a href="#USR-UnSubscribeDevParsed-取消订阅单个设备解析后的数据" class="fwb">USR_UnSubscribeDevParsed</a></td>    </tr><tr>        <td>取消订阅账户下所有设备数据</td><td align="center"><a href="#USR-UnSubscribeUserRaw-取消订阅账户下所有设备原始数据流" class="fwb">USR_UnSubscribeUserRaw</a></td><td align="center"><a href="#USR-UnSubscribeUserParsed-取消订阅账户下所有设备解析后的数据" class="fwb">USR_UnSubscribeUserParsed</a></td>    </tr><tr>        <td rowspan="2" align="center">推送数据</td><td>推送回调</td><td colspan="2" align="center"><a href="#USR-OnPubAck-设置-推送响应回调函数" class="fwb">USR_OnPubAck</a></td>    </tr><tr>        <td>推送数据</td><td align="center"><a href="#USR-PublishRawToDev-向单台设备推送原始数据流" class="fwb">USR_PublishRawToDev</a>            <br align="center"><a href="#USR-PublishRawToUser-向账户下所有设备推送原始数据流" class="fwb">USR_PublishRawToUser</a></td><td align="center"><a href="#USR-PublishParsedSetDataPoint-设置单台设备数据点值" class="fwb">USR_PublishParsedSetDataPoint</a>            <br align="center"><a href="#USR-PublishParsedQueryDataPoint-查询单台设备数据点值" class="fwb">USR_PublishParsedQueryDataPoint</a></td>    </tr><tr>        <td colspan="1" align="center">接收数据</td><td>接收数据</td><td align="center"><a href="#USR-OnRcvRawFromDev-设置-接收设备原始数据流回调函数" class="fwb">USR_OnRcvRawFromDev</a></td><td align="center"><a href="#USR-OnRcvParsedDataPointPush-设置-接收设备数据点值推送回调函数" class="fwb">USR_OnRcvParsedDataPointPush</a>            <br align="center"><a href="#USR-OnRcvParsedDevStatusPush-设置-接收设备上下线推送回调函数" class="fwb">USR_OnRcvParsedDevStatusPush</a>            <br align="center"><a href="#USR-OnRcvParsedDevAlarmPush-设置-接收设备报警推送回调函数" class="fwb">USR_OnRcvParsedDevAlarmPush</a>            <br align="center"><a href="#USR-OnRcvParsedOptionResponseReturn-设置-接收设备数据点操作应答回调函数" class="fwb">USR_OnRcvParsedOptionResponseReturn</a></td>    </tr></table>
 
 ## --------- 初始化和释放 ---------
 
@@ -66,7 +66,7 @@ public static extern int USR_GetVer();
 ```
 
 ```cpp
-
+typedef long(_stdcall *FN_USR_GetVer)();
 ```
 
 > 调用
@@ -80,7 +80,17 @@ Log("dll版本号: " + USR_GetVer().ToString());
 ```
 
 ```cpp
-
+/*载入DLL*/
+HINSTANCE hUsrCloud;
+hUsrCloud = LoadLibraryA("UsrCloud.dll");
+/*获取函数地址*/
+FN_USR_GetVer USR_GetVer;
+USR_GetVer = (FN_USR_GetVer)GetProcAddress(hUsrCloud, "USR_GetVer");
+long iVer = USR_GetVer();
+CString sVer;
+sVer.Format(_T("DLL版本号: %d\n"), iVer);
+/*dll用完了之后, 释放掉*/
+FreeLibrary(hUsrCloud);
 ```
 
 <br>
@@ -110,7 +120,8 @@ public static extern bool USR_Init(
 ```
 
 ```cpp
-
+typedef boolean(_stdcall *FN_USR_Init)(
+    LPCWSTR Host, unsigned short Port, long Ver);
 ```
 
 > 调用,一般在窗口创建时调用
@@ -130,7 +141,21 @@ if (USR_Init("clouddata.usr.cn", 1883, 1))
 ```
 
 ```cpp
-
+/*GetProc*/
+FN_USR_Init USR_Init;
+USR_Init = (FN_USR_Init)GetProcAddress(hUsrCloud, "USR_Init");
+/*use*/
+CString sHost, sPort;
+m_Edit_Host.GetWindowTextW(sHost);
+m_Edit_Port.GetWindowTextW(sPort);
+LPCWSTR Host = (LPCWSTR)sHost;
+unsigned short Port = _ttoi(sPort);
+CString str;
+boolean b = USR_Init(Host, Port, 2);
+if (b) {
+    str.Format(_T("初始化成功\n"));
+    /* 初始化成功, 一般在这里设置回调函数 */
+};
 ```
 
 <br>
@@ -164,13 +189,13 @@ public static extern bool USR_Release();
 ```
 
 ```cpp
-
+typedef boolean(_stdcall *FN_USR_Release)();
 ```
 
 > 调用,一般在窗口释放时调用
 
 ```pascal
-if USR_Release() then
+if USR_Release then
 begin
   { 释放成功 }
 end;
@@ -184,7 +209,15 @@ if(USR_Release())
 ```
 
 ```cpp
+FN_USR_Release USR_Release;
+USR_Release = (FN_USR_Release)GetProcAddress(
+    hUsrCloud, "USR_Release");
 
+boolean b = USR_Release();
+CString str;
+if (b) {
+    str.Format(_T("释放成功\n"));
+};
 ```
 
 <br>
@@ -226,7 +259,10 @@ public static extern bool USR_OnConnAck(
 ```
 
 ```cpp
-
+typedef void(_stdcall *TUSR_ConnAckEvent)(
+    long ReturnCode, LPCWSTR Description);
+typedef boolean(_stdcall *FN_USR_OnConnAck)(
+    TUSR_ConnAckEvent OnConnAct);
 ```
 
 > 调用,一般在USR_Init执行成功之后调用 
@@ -280,7 +316,23 @@ USR_OnConnAck(FConnAck_CBF);
 ```
 
 ```cpp
-
+static void _stdcall ConnAck_CBF(
+    long ReturnCode, LPCWSTR Description);
+    
+/* 自定义回调函数,用于判断是否连接成功 */
+void CUsrCloudDllDemoDlg::ConnAck_CBF(
+    long ReturnCode, LPCWSTR Description)
+{
+	CString str;
+	str.Format(_T("【连接事件】\n返回码：%d  描述： %s\n"), 
+        ReturnCode, Description);
+	((CUsrCloudDllDemoDlg*)theApp.GetMainWnd())->AppendLog(str);
+}
+/* 注册回调函数 */
+FN_USR_OnConnAck USR_OnConnAck;
+USR_OnConnAck = (FN_USR_OnConnAck)GetProcAddress(
+    hUsrCloud, "USR_OnConnAck");
+USR_OnConnAck(ConnAck_CBF);
 ```
 
 <br>
@@ -344,7 +396,8 @@ public static extern bool USR_Connect(
 ```
 
 ```cpp
-
+typedef boolean(_stdcall *FN_USR_Connect)(
+    LPCWSTR Username, LPCWSTR Password);
 ```
 
 > 调用
@@ -364,7 +417,19 @@ if (USR_Connect("sdktest", "sdktest"))
 ```
 
 ```cpp
+FN_USR_Connect USR_Connect;
+USR_Connect = (FN_USR_Connect)GetProcAddress(hUsrCloud, "USR_Connect");
 
+CString sUserName, sPassword;
+m_Edit_Username.GetWindowTextW(sUserName);
+m_Edit_Password.GetWindowTextW(sPassword);
+LPCWSTR UserName = (LPCWSTR)sUserName;
+LPCWSTR Password = (LPCWSTR)sPassword;
+boolean b = USR_Connect(UserName, Password);
+CString str;
+if (b) {
+    str.Format(_T("连接已发起\n"));
+};
 ```
 
 <br>
@@ -396,15 +461,15 @@ public static extern bool USR_DisConnect();
 ```
 
 ```cpp
-
+typedef boolean(_stdcall *FN_USR_DisConnect)();
 ```
 
 > 调用
 
 ```pascal
-if USR_DisConnect() then
+if USR_DisConnect then
 begin
-{ 断开成功  }
+    { 断开成功 }
 end;
 ```
 
@@ -416,7 +481,15 @@ if (USR_DisConnect())
 ```
 
 ```cpp
+FN_USR_DisConnect USR_DisConnect;
+USR_DisConnect = (FN_USR_DisConnect)GetProcAddress(
+    hUsrCloud, "USR_DisConnect");
 
+boolean b = USR_DisConnect();
+CString str;
+if (b) {
+    str.Format(_T("连接已断开\n"));
+};
 ```
 
 <br>
@@ -458,7 +531,12 @@ public static extern bool USR_OnSubscribeAck(
 ```
 
 ```cpp
-
+typedef void(_stdcall *TUSR_SubscribeAckEvent)(
+    long MessageID, 
+    LPCWSTR SubFunName, LPCWSTR SubParam, 
+    LPCWSTR ReturnCode);
+typedef boolean(_stdcall *FN_USR_OnSubscribeAck)(
+    TUSR_SubscribeAckEvent OnSubscribeAck);
 ```
 
 > 调用,一般在USR_Init执行成功之后调用 
@@ -522,7 +600,28 @@ USR_OnSubscribeAck( FSubscribeAck_CBF );
 ```
 
 ```cpp
+/* 自定义回调函数,用于判断订阅结果 */
+static void _stdcall SubscribeAck_CBF(
+    long MessageID, 
+    LPCWSTR SubFunName, LPCWSTR SubParam, 
+    LPCWSTR ReturnCode);
 
+void CUsrCloudDllDemoDlg::SubscribeAck_CBF(
+    long MessageID, LPCWSTR SubFunName, LPCWSTR SubParam, 
+    LPCWSTR ReturnCode)
+{
+	CString str;
+	str.Format(
+        _T("【订阅事件】\nMessageID：%d\n  SubFunName： %s\n 设备ID(或用户名)： %s\n 订阅结果:%s\n"), 
+        MessageID, SubFunName, SubParam, ReturnCode);
+	((CUsrCloudDllDemoDlg*)theApp.GetMainWnd())->AppendLog(str);
+}
+
+/* 注册回调函数 */
+FN_USR_OnSubscribeAck USR_OnSubscribeAck;
+USR_OnSubscribeAck = (FN_USR_OnSubscribeAck)GetProcAddress(
+    hUsrCloud, "USR_OnSubscribeAck");
+USR_OnSubscribeAck(SubscribeAck_CBF);
 ```
 
 <br>
@@ -594,7 +693,10 @@ public static extern bool USR_OnUnSubAck(
 ```
 
 ```cpp
-
+typedef void(_stdcall *TUSR_UnSubscribeAckEvent)(
+    long MessageID, LPCWSTR UnSubFunName, LPCWSTR UnSubParam);
+typedef boolean(_stdcall *FN_USR_OnUnSubscribeAck)(
+    TUSR_UnSubscribeAckEvent OnUnSubscribeAck);
 ```
 
 > 调用,一般在USR_Init执行成功之后调用 
@@ -637,7 +739,24 @@ USR_OnUnSubAck(FUnSubAck_CBF);
 ```
 
 ```cpp
+/* 自定义回调函数,用于判断订阅结果 */
+static void _stdcall UnSubscribeAck_CBF(
+    long MessageID, LPCWSTR UnSubFunName, LPCWSTR UnSubParam);
 
+void CUsrCloudDllDemoDlg::UnSubscribeAck_CBF(
+    long MessageID, LPCWSTR UnSubFunName, LPCWSTR UnSubParam)
+{
+	CString str;
+	str.Format(
+        _T("【取消订阅事件】\nMessageID：%d\n  UnSubFunName： %s\n 设备ID(或用户名)： %s\n"), 
+        MessageID, UnSubFunName, UnSubParam);
+	((CUsrCloudDllDemoDlg*)theApp.GetMainWnd())->AppendLog(str);
+}
+
+/* 注册回调函数 */
+FN_USR_OnUnSubscribeAck USR_OnUnSubscribeAck;
+USR_OnUnSubscribeAck = (FN_USR_OnUnSubscribeAck)GetProcAddress(hUsrCloud, "USR_OnUnSubscribeAck");
+USR_OnUnSubscribeAck(UnSubscribeAck_CBF);
 ```
 
 <br>
@@ -689,7 +808,8 @@ public static extern int USR_SubscribeDevParsed(string devId);
 ```
 
 ```cpp
-
+typedef long(_stdcall *FN_USR_SubscribeDevParsed)(
+    LPCWSTR DevId);
 ```
 
 > 调用
@@ -713,7 +833,17 @@ if(iMsgId > -1)
 ```
 
 ```cpp
+FN_USR_SubscribeDevParsed USR_SubscribeDevParsed;
+USR_SubscribeDevParsed = (FN_USR_SubscribeDevParsed)GetProcAddress(
+    hUsrCloud, "USR_SubscribeDevParsed");
 
+CString sDevId;
+m_Edit_SubParsedDevId.GetWindowTextW(sDevId);
+LPCWSTR DevId = (LPCWSTR)sDevId;
+long iMsgId = USR_SubscribeDevParsed(DevId);
+CString str;
+str.Format(
+    _T("USR_SubscribeDevParsed 订阅已发起\n MsgId:%d\n"), iMsgId);
 ```
 
 <br>
@@ -745,7 +875,8 @@ public static extern int USR_SubscribeUserParsed(string Username);
 ```
 
 ```cpp
-
+typedef long(_stdcall *FN_USR_SubscribeUserParsed)(
+    LPCWSTR Username);
 ```
 
 > 调用
@@ -769,7 +900,17 @@ if(iMsgId > -1)
 ```
 
 ```cpp
+FN_USR_SubscribeUserParsed USR_SubscribeUserParsed;
+USR_SubscribeUserParsed = (FN_USR_SubscribeUserParsed)GetProcAddress(
+    hUsrCloud, "USR_SubscribeUserParsed");
 
+CString sUserName;
+m_Edit_SubParsedUsername.GetWindowTextW(sUserName);
+LPCWSTR UserName = (LPCWSTR)sUserName;
+long iMsgId = USR_SubscribeUserParsed(UserName);
+CString str;
+str.Format(
+    _T("USR_SubscribeUserParsed 订阅已发起\n MsgId:%d\n"), iMsgId);
 ```
 
 <br>
@@ -803,7 +944,8 @@ public static extern int USR_UnSubscribeDevParsed(string DevId);
 ```
 
 ```cpp
-
+typedef long(_stdcall *FN_USR_UnSubscribeDevParsed)(
+    LPCWSTR DevId);
 ```
 
 > 调用
@@ -827,7 +969,17 @@ if(iMsgId > -1)
 ```
 
 ```cpp
+FN_USR_UnSubscribeDevParsed USR_UnSubscribeDevParsed;
+USR_UnSubscribeDevParsed = (FN_USR_UnSubscribeDevParsed)GetProcAddress(
+    hUsrCloud, "USR_UnSubscribeDevParsed");
 
+CString sDevId;
+m_Edit_SubParsedDevId.GetWindowTextW(sDevId);
+LPCWSTR DevId = (LPCWSTR)sDevId;
+long iMsgId = USR_UnSubscribeDevParsed(DevId);
+CString str;
+str.Format(
+    _T("USR_UnSubscribeDevParsed 取消订阅已发起\n MsgId:%d\n"), iMsgId);
 ```
 
 <br>
@@ -860,7 +1012,8 @@ public static extern int USR_UnSubscribeUserParsed(
 ```
 
 ```cpp
-
+typedef long(_stdcall *FN_USR_UnSubscribeUserParsed)(
+    LPCWSTR Username);
 ```
 
 > 调用
@@ -884,7 +1037,17 @@ if(iMsgId > -1)
 ```
 
 ```cpp
+FN_USR_UnSubscribeUserParsed USR_UnSubscribeUserParsed;
+USR_UnSubscribeUserParsed = (FN_USR_UnSubscribeUserParsed)GetProcAddress(
+    hUsrCloud, "USR_UnSubscribeUserParsed");
 
+CString sUserName;
+m_Edit_SubParsedUsername.GetWindowTextW(sUserName);
+LPCWSTR UserName = (LPCWSTR)sUserName;
+long iMsgId = USR_UnSubscribeUserParsed(UserName);
+CString str;
+str.Format(
+    _T("USR_UnSubscribeUserParsed 取消订阅已发起\n MsgId:%d\n"), iMsgId);
 ```
 
 <br>
@@ -918,6 +1081,8 @@ public static extern int USR_SubscribeDevRaw(string devId);
 ```
 
 ```cpp
+typedef long(_stdcall *FN_USR_SubscribeDevRaw)(
+    LPCWSTR DevId);
 
 ```
 
@@ -942,7 +1107,17 @@ if(iMsgId > -1)
 ```
 
 ```cpp
+FN_USR_SubscribeDevRaw USR_SubscribeDevRaw;
+USR_SubscribeDevRaw = (FN_USR_SubscribeDevRaw)GetProcAddress(
+    hUsrCloud, "USR_SubscribeDevRaw");
 
+CString sDevId;
+m_Edit_SubRawDevId.GetWindowTextW(sDevId);
+LPCWSTR DevId = (LPCWSTR)sDevId;
+long iMsgId = USR_SubscribeDevRaw(DevId);
+CString str;
+str.Format(
+    _T("USR_SubscribeDevRaw 订阅已发起\n MsgId:%d\n"), iMsgId);
 ```
 
 <br>
@@ -976,7 +1151,8 @@ public static extern int USR_SubscribeUserRaw(
 ```
 
 ```cpp
-
+typedef long(_stdcall *FN_USR_SubscribeUserRaw)(
+    LPCWSTR Username);
 ```
 
 > 调用
@@ -1000,7 +1176,17 @@ if(iMsgId > -1)
 ```
 
 ```cpp
+FN_USR_SubscribeUserRaw USR_SubscribeUserRaw;
+USR_SubscribeUserRaw = (FN_USR_SubscribeUserRaw)GetProcAddress(
+    hUsrCloud, "USR_SubscribeUserRaw");
 
+CString sUserName;
+m_Edit_SubRawUsername.GetWindowTextW(sUserName);
+LPCWSTR UserName = (LPCWSTR)sUserName;
+long iMsgId = USR_SubscribeUserRaw(UserName);
+CString str;
+str.Format(
+    _T("USR_SubscribeUserRaw 订阅已发起\n MsgId:%d\n"), iMsgId);
 ```
 
 <br>
@@ -1034,7 +1220,8 @@ public static extern int USR_UnSubscribeDevRaw(
 ```
 
 ```cpp
-
+typedef long(_stdcall *FN_USR_UnSubscribeDevRaw)(
+    LPCWSTR DevId);
 ```
 
 > 调用
@@ -1058,7 +1245,17 @@ if(iMsgId > -1)
 ```
 
 ```cpp
+FN_USR_UnSubscribeDevRaw USR_UnSubscribeDevRaw;
+USR_UnSubscribeDevRaw = (FN_USR_UnSubscribeDevRaw)GetProcAddress(
+    hUsrCloud, "USR_UnSubscribeDevRaw");
 
+CString sDevId;
+m_Edit_SubRawDevId.GetWindowTextW(sDevId);
+LPCWSTR DevId = (LPCWSTR)sDevId;
+long iMsgId = USR_UnSubscribeDevRaw(DevId);
+CString str;
+str.Format(
+    _T("USR_UnSubscribeDevRaw 取消订阅已发起\n MsgId:%d\n"), iMsgId);
 ```
 
 <br>
@@ -1092,7 +1289,8 @@ public static extern int USR_UnSubscribeUserRaw(
 ```
 
 ```cpp
-
+typedef long(_stdcall *FN_USR_UnSubscribeUserRaw)(
+    LPCWSTR Username);
 ```
 
 > 调用
@@ -1116,7 +1314,17 @@ if(iMsgId > -1)
 ```
 
 ```cpp
+FN_USR_UnSubscribeUserRaw USR_UnSubscribeUserRaw;
+USR_UnSubscribeUserRaw = (FN_USR_UnSubscribeUserRaw)GetProcAddress(
+    hUsrCloud, "USR_UnSubscribeUserRaw");
 
+CString sUserName;
+m_Edit_SubRawUsername.GetWindowTextW(sUserName);
+LPCWSTR UserName = (LPCWSTR)sUserName;
+long iMsgId = USR_UnSubscribeUserRaw(UserName);
+CString str;
+str.Format(
+    _T("USR_UnSubscribeUserRaw 取消订阅已发起\n MsgId:%d\n"), iMsgId);
 ```
 
 <br>
@@ -1159,7 +1367,9 @@ public static extern bool USR_OnPubAck(
 ```
 
 ```cpp
-
+typedef void(_stdcall *TUSR_PubAckEvent)(long MessageID);
+typedef boolean(_stdcall *FN_USR_OnPubAck)(
+    TUSR_PubAckEvent OnPubAck);
 ```
 
 > 调用
@@ -1194,7 +1404,21 @@ USR_OnPubAck(FPubAck_CBF);
 ```
 
 ```cpp
+/* 自定义回调函数,用于判断是否推送成功 */
+static void _stdcall PubAck_CBF(long MessageID);
 
+void CUsrCloudDllDemoDlg::PubAck_CBF(long MessageID)
+{
+	CString str;
+	str.Format(_T("【推送事件】\n MessageID：%d\n"), MessageID);
+	((CUsrCloudDllDemoDlg*)theApp.GetMainWnd())->AppendLog(str);
+}
+
+/* 注册回调函数 */
+FN_USR_OnPubAck USR_OnPubAck;
+USR_OnPubAck = (FN_USR_OnPubAck)GetProcAddress(
+    hUsrCloud, "USR_OnPubAck");
+USR_OnPubAck(PubAck_CBF);
 ```
 
 <br>
@@ -1242,7 +1466,8 @@ public static extern int USR_PublishParsedSetDataPoint(
 ```
 
 ```cpp
-
+typedef long(_stdcall *FN_USR_PublishParsedSetDataPoint)(
+    LPCWSTR DevId, LPCWSTR PointId, LPCWSTR Value);
 ```
 
 > 调用
@@ -1271,7 +1496,21 @@ if (iMsgId > -1)
 ```
 
 ```cpp
+FN_USR_PublishParsedSetDataPoint USR_PublishParsedSetDataPoint;
+USR_PublishParsedSetDataPoint = (FN_USR_PublishParsedSetDataPoint)GetProcAddress(
+    hUsrCloud, "USR_PublishParsedSetDataPoint");
 
+CString sDevId, sPointId, sValue;
+m_Edit_PubParsedDevId.GetWindowTextW(sDevId);
+m_Edit_PubParsedPointId.GetWindowTextW(sPointId);
+m_Edit_PubParsedValueS.GetWindowTextW(sValue);
+LPCWSTR DevId = (LPCWSTR)sDevId;
+LPCWSTR PointId = (LPCWSTR)sPointId;
+LPCWSTR Value = (LPCWSTR)sValue;
+long iMsgId = USR_PublishParsedSetDataPoint(
+    DevId, PointId, Value);
+CString str;
+str.Format(_T("消息已推送\n MsgId:%d\n"), iMsgId); 
 ```
 
 <br>
@@ -1307,7 +1546,8 @@ public static extern int USR_PublishParsedQueryDataPoint(
 ```
 
 ```cpp
-
+typedef long(_stdcall *FN_USR_PublishParsedQueryDataPoint)(
+    LPCWSTR DevId, LPCWSTR PointId);
 ```
 
 > 调用
@@ -1335,7 +1575,19 @@ if (iMsgId > -1)
 ```
 
 ```cpp
+FN_USR_PublishParsedQueryDataPoint USR_PublishParsedQueryDataPoint;
+USR_PublishParsedQueryDataPoint = (FN_USR_PublishParsedQueryDataPoint)GetProcAddress(
+    hUsrCloud, "USR_PublishParsedQueryDataPoint");
 
+CString sDevId, sPointId;
+m_Edit_PubParsedDevId.GetWindowTextW(sDevId);
+m_Edit_PubParsedPointId.GetWindowTextW(sPointId);
+LPCWSTR DevId = (LPCWSTR)sDevId;
+LPCWSTR PointId = (LPCWSTR)sPointId;
+long iMsgId = USR_PublishParsedQueryDataPoint(
+    DevId, PointId);
+CString str;
+str.Format(_T("消息已推送\n MsgId:%d\n"), iMsgId);
 ```
 
 <br>
@@ -1372,7 +1624,8 @@ public static extern int USR_PublishRawToDev(
 ```
 
 ```cpp
-
+typedef long(_stdcall *FN_USR_PublishRawToDev)(
+    LPCWSTR DevId, void *pData, long DataLen);
 ```
 
 > 调用
@@ -1404,7 +1657,27 @@ if (iMsgId > -1)
 ```
 
 ```cpp
+FN_USR_PublishRawToDev USR_PublishRawToDev;
+USR_PublishRawToDev = (FN_USR_PublishRawToDev)GetProcAddress(
+    hUsrCloud, "USR_PublishRawToDev");
 
+CString sDevId, sData;
+m_Edit_PubRawDevId.GetWindowTextW(sDevId);
+m_RichEdit_PubRaw.GetWindowTextW(sData);
+LPCWSTR DevId = (LPCWSTR)sDevId;
+byte buf[1024];
+int len = 0;
+if (m_Check_PubRaw.GetCheck()) {
+    len = HexStr2Buf(sData, buf);
+}
+else
+{
+    len = WideCharToMultiByte(CP_ACP, 0, sData, -1, NULL, 0, NULL, NULL) - 1;
+    WideCharToMultiByte(CP_ACP, 0, sData, -1, (LPSTR)&buf[0], len, NULL, NULL);
+};
+long iMsgId = USR_PublishRawToDev(DevId, &buf[0], len);
+CString str;
+str.Format(_T("消息已推送\n MsgId:%d\n"), iMsgId);
 ```
 
 <br>
@@ -1440,7 +1713,8 @@ public static extern int USR_PublishRawToUser(
 ```
 
 ```cpp
-
+typedef long(_stdcall *FN_USR_PublishRawToUser)(
+    LPCWSTR Username, void *pData, long DataLen);
 ```
 
 > 调用
@@ -1472,7 +1746,27 @@ if (iMsgId > -1)
 ```
 
 ```cpp
+FN_USR_PublishRawToUser USR_PublishRawToUser;
+USR_PublishRawToUser = (FN_USR_PublishRawToUser)GetProcAddress(
+    hUsrCloud, "USR_PublishRawToUser");
 
+CString sUsername, sData;
+m_Edit_PubRawUsername.GetWindowTextW(sUsername);
+m_RichEdit_PubRaw.GetWindowTextW(sData);
+LPCWSTR Username = (LPCWSTR)sUsername;
+byte buf[1024];
+int len = 0;
+if (m_Check_PubRaw.GetCheck()) {
+    len = HexStr2Buf(sData, buf);
+}
+else
+{
+    len = WideCharToMultiByte(CP_ACP, 0, sData, -1, NULL, 0, NULL, NULL) - 1;
+    WideCharToMultiByte(CP_ACP, 0, sData, -1, (LPSTR)&buf[0], len, NULL, NULL);
+};
+long iMsgId = USR_PublishRawToUser(Username, &buf[0], len);
+CString str;
+str.Format(_T("消息已推送\n MsgId:%d\n"), iMsgId);
 ```
 
 <br>
@@ -1523,7 +1817,10 @@ public static extern bool USR_OnRcvParsedDataPointPush(
 ```
 
 ```cpp
-
+typedef void(_stdcall *TUSR_RcvParsedEvent)(
+    long MessageID, LPCWSTR DevId, LPCWSTR JsonStr);
+typedef boolean(_stdcall *FN_USR_OnRcvParsedDataPointPush)(
+    TUSR_RcvParsedEvent OnRcvParsed);
 ```
 
 > 调用,一般在USR_Init执行成功之后调用 
@@ -1578,7 +1875,26 @@ USR_OnRcvParsedDataPointPush(
 ```
 
 ```cpp
+/* 自定义回调函数,用于接收数据点值推送 */
+static void _stdcall RcvParsedDataPointPush_CBF(
+    long MessageID, LPCWSTR DevId, LPCWSTR JsonStr);
 
+void CUsrCloudDllDemoDlg::RcvParsedDataPointPush_CBF(
+    long MessageID, LPCWSTR DevId, LPCWSTR JsonStr)
+{
+	CString str;
+	str.Format(
+        _T("【接收设备数据点推送事件】\n MessageID：%d\n DevId：%s\n JsonStr：%s\n"), 
+        MessageID, DevId, JsonStr);
+	((CUsrCloudDllDemoDlg*)theApp.GetMainWnd())->AppendLog(str);
+}
+
+/* 注册回调函数 */
+
+FN_USR_OnRcvParsedDataPointPush USR_OnRcvParsedDataPointPush;  
+USR_OnRcvParsedDataPointPush = (FN_USR_OnRcvParsedDataPointPush)GetProcAddress(
+    hUsrCloud, "USR_OnRcvParsedDataPointPush");
+USR_OnRcvParsedDataPointPush(RcvParsedDataPointPush_CBF);
 ```
 
 > 设备数据点值推送 JSON数据格式
@@ -1636,7 +1952,10 @@ public static extern bool USR_OnRcvParsedDevStatusPush(
 ```
 
 ```cpp
-
+typedef void(_stdcall *TUSR_RcvParsedEvent)(
+    long MessageID, LPCWSTR DevId, LPCWSTR JsonStr);
+typedef boolean(_stdcall *FN_USR_OnRcvParsedDevStatusPush)(
+    TUSR_RcvParsedEvent OnRcvParsed);
 ```
 
 > 调用,一般在USR_Init执行成功之后调用 
@@ -1691,7 +2010,26 @@ USR_OnRcvParsedDevStatusPush(
 ```
 
 ```cpp
+/* 自定义回调函数,用于接收上下线推送 */
+static void _stdcall RcvParsedDevStatusPush_CBF(
+    long MessageID, LPCWSTR DevId, LPCWSTR JsonStr);
 
+void CUsrCloudDllDemoDlg::RcvParsedDevStatusPush_CBF(
+    long MessageID, LPCWSTR DevId, LPCWSTR JsonStr)
+{
+	CString str;
+	str.Format(
+        _T("【接收设备在线状态推送事件】\n MessageID：%d\n DevId：%s\n JsonStr：%s\n"), 
+        MessageID, DevId, JsonStr);
+	((CUsrCloudDllDemoDlg*)theApp.GetMainWnd())->AppendLog(str);
+}
+
+/* 注册回调函数 */
+
+FN_USR_OnRcvParsedDevStatusPush USR_OnRcvParsedDevStatusPush;  
+USR_OnRcvParsedDevStatusPush = (FN_USR_OnRcvParsedDevStatusPush)GetProcAddress(
+    hUsrCloud, "USR_OnRcvParsedDevStatusPush");
+USR_OnRcvParsedDevStatusPush(RcvParsedDevStatusPush_CBF);
 ```
 
 > 设备上下线推送 JSON数据格式
@@ -1747,7 +2085,10 @@ public static extern bool USR_OnRcvParsedDevAlarmPush(
 ```
 
 ```cpp
-
+typedef void(_stdcall *TUSR_RcvParsedEvent)(
+    long MessageID, LPCWSTR DevId, LPCWSTR JsonStr);
+typedef boolean(_stdcall *FN_USR_OnRcvParsedDevAlarmPush)(
+    TUSR_RcvParsedEvent OnRcvParsed);
 ```
 
 > 调用,一般在USR_Init执行成功之后调用 
@@ -1802,7 +2143,26 @@ USR_OnRcvParsedDevAlarmPush(
 ```
 
 ```cpp
+/* 自定义回调函数,用于接收报警推送 */
+static void _stdcall RcvParsedDevAlarmPush_CBF(
+    long MessageID, LPCWSTR DevId, LPCWSTR JsonStr);
 
+void CUsrCloudDllDemoDlg::RcvParsedDevAlarmPush_CBF(
+    long MessageID, LPCWSTR DevId, LPCWSTR JsonStr)
+{
+	CString str;
+	str.Format(
+        _T("【接收设备报警推送事件】\n MessageID：%d\n DevId：%s\n JsonStr：%s\n"), 
+        MessageID, DevId, JsonStr);
+	((CUsrCloudDllDemoDlg*)theApp.GetMainWnd())->AppendLog(str);
+}
+
+/* 注册回调函数 */
+
+FN_USR_OnRcvParsedDevAlarmPush USR_OnRcvParsedDevAlarmPush;  
+USR_OnRcvParsedDevAlarmPush = (FN_USR_OnRcvParsedDevAlarmPush)GetProcAddress(
+    hUsrCloud, "USR_OnRcvParsedDevAlarmPush");
+USR_OnRcvParsedDevAlarmPush(RcvParsedDevAlarmPush_CBF);
 ```
 
 > 设备报警推送 JSON数据格式
@@ -1868,7 +2228,10 @@ public static extern bool USR_OnRcvParsedOptionResponseReturn(
 ```
 
 ```cpp
-
+typedef void(_stdcall *TUSR_RcvParsedEvent)(
+    long MessageID, LPCWSTR DevId, LPCWSTR JsonStr);
+typedef boolean(_stdcall *FN_USR_OnRcvParsedOptionResponseReturn)(
+    TUSR_RcvParsedEvent OnRcvParsed);
 ```
 
 > 调用,一般在USR_Init执行成功之后调用 
@@ -1921,7 +2284,26 @@ USR_OnRcvParsedOptionResponseReturn(FRcvParsedOptionResponseReturn_CBF);
 ```
 
 ```cpp
+/* 自定义回调函数,用于接收数据点操作应答 */
+static void _stdcall RcvParsedOptionResponseReturn_CBF(
+    long MessageID, LPCWSTR DevId, LPCWSTR JsonStr);
 
+void CUsrCloudDllDemoDlg::RcvParsedOptionResponseReturn_CBF(
+    long MessageID, LPCWSTR DevId, LPCWSTR JsonStr)
+{
+	CString str;
+	str.Format(
+        _T("【接收设备数据点操作应答事件】\n MessageID：%d\n DevId：%s\n JsonStr：%s\n"),
+         MessageID, DevId, JsonStr);
+	((CUsrCloudDllDemoDlg*)theApp.GetMainWnd())->AppendLog(str);
+}
+
+/* 注册回调函数 */
+
+FN_USR_OnRcvParsedOptionResponseReturn USR_OnRcvParsedOptionResponseReturn;  
+USR_OnRcvParsedOptionResponseReturn = (FN_USR_OnRcvParsedOptionResponseReturn)GetProcAddress(
+    hUsrCloud, "USR_OnRcvParsedOptionResponseReturn");
+USR_OnRcvParsedOptionResponseReturn(RcvParsedOptionResponseReturn_CBF);
 ```
 
 > 数据点操作应答 JSON数据格式
@@ -1998,7 +2380,10 @@ public static extern bool USR_OnRcvRawFromDev(
 ```
 
 ```cpp
-
+typedef void(_stdcall *TUSR_RcvRawEvent)(
+    long MessageID, LPCWSTR DevId, void *pData, long DataLen);
+typedef boolean(_stdcall *FN_USR_OnRcvRawFromDev)(
+    TUSR_RcvRawEvent OnRcvRaw);
 ```
 
 > 调用,一般在USR_Init执行成功之后调用 
@@ -2055,7 +2440,33 @@ USR_OnRcvRawFromDev(FRcvRawFromDev_CBF);
 ```
 
 ```cpp
+/* 自定义回调函数,用于接收设备原始数据流 */
+static void _stdcall RcvRawFromDev_CBF(
+    long MessageID, LPCWSTR DevId, void *pData, long DataLen);
 
+void CUsrCloudDllDemoDlg::RcvRawFromDev_CBF(
+    long MessageID, LPCWSTR DevId, void *pData, long DataLen)
+{
+	CString sHex, sByte;
+	byte* pBuf = (byte*)pData;
+	for (int i = 0; i < DataLen; i++)
+	{
+		sByte.Format(_T("%02x "), pBuf[i]);
+		sHex += sByte;
+	}
+	
+	CString str;
+	str.Format(
+        _T("【接收设备原始数据流事件】\n MessageID：%d\n DevId：%s\n 内容(HEX)：%s\n"), 
+        MessageID, DevId, sHex);
+	((CUsrCloudDllDemoDlg*)theApp.GetMainWnd())->AppendLog(str);
+}
+
+/* 注册回调函数 */
+FN_USR_OnRcvRawFromDev USR_OnRcvRawFromDev;  
+USR_OnRcvRawFromDev = (FN_USR_OnRcvRawFromDev)GetProcAddress(
+    hUsrCloud, "USR_OnRcvRawFromDev");
+USR_OnRcvRawFromDev(RcvRawFromDev_CBF);
 ```
 
 <br>
@@ -2095,4 +2506,4 @@ DataLen|[out] 数据长度
 ---- | ---- | ---- | ----
 1.0.0 | 2017-7-26 | 初版 | 张振鸣
 <a href='old_1.0.1'>1.0.1</a> | 2017-8-8 | 修改USR_Publish一处提示| 张振鸣
-1.1.0 | 2017-12-06 | 1. 增加json格式数据协议<br>2. 增加相关函数,以解决子账号设备消息的订阅推送问题| 张振鸣
+1.1.0 | 2017-12-07 | 1. 增加json格式数据协议<br>2. 增加相关函数,以解决子账号设备消息的订阅推送问题| 张振鸣
