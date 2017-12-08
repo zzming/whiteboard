@@ -582,7 +582,7 @@ private void SubscribeAck_CBF(
 
     Log("【订阅回调】");
     Log("MsgId:" + messageID.ToString());
-    Log("函数名称:" + SubFunName);
+    Log("函数名称:" + sSubFunName);
     for (int i = 0; i < len; ++i)
     {
         Log("设备ID(或用户名)：" + SubParamArray[i] +
@@ -605,7 +605,6 @@ static void _stdcall SubscribeAck_CBF(
     long MessageID, 
     LPCWSTR SubFunName, LPCWSTR SubParam, 
     LPCWSTR ReturnCode);
-
 void CUsrCloudDllDemoDlg::SubscribeAck_CBF(
     long MessageID, LPCWSTR SubFunName, LPCWSTR SubParam, 
     LPCWSTR ReturnCode)
@@ -669,27 +668,30 @@ ReturnCode可能的值有:
 > USR_OnUnSubscribeAck 设置 取消订阅响应回调函数 声明:
 
 ```pascal
-TUSR_UnSubAckEvent = procedure(
-    MessageID: LongInt; DevId: PWideChar); stdcall;
+  TUSR_UnSubscribeAckEvent = procedure(
+      MessageID: LongInt; 
+      UnSubFunName, UnSubParam: PWideChar); stdcall;
 ```
 
 ```pascal
-function USR_OnUnSubAck(
-    OnUnSubAck: TUSR_UnSubAckEvent): Boolean; 
-stdcall; external 'UsrCloud.dll';
+function USR_OnUnSubscribeAck(
+    OnUnSubscribeAck: TUSR_UnSubscribeAckEvent):
+    stdcall; external 'UsrCloud.dll';
 ```
 
 ```csharp
-public delegate void TUSR_UnSubAckEvent(
-    int messageID, IntPtr devId);
+public delegate void TUSR_UnSubscribeAckEvent(
+    int messageID, 
+    IntPtr UnSubFunName, 
+    IntPtr UnSubParam);
 ```
 
 ```csharp
 [DllImport("UsrCloud.dll", CharSet = CharSet.Auto, 
-    EntryPoint = "USR_OnUnSubAck", 
+    EntryPoint = "USR_OnUnSubscribeAck", 
     CallingConvention = CallingConvention.StdCall)]
-public static extern bool USR_OnUnSubAck(
-    TUSR_UnSubAckEvent OnUnSubAck);
+public static extern bool USR_OnUnSubscribeAck(
+    TUSR_UnSubscribeAckEvent OnUnSubscribeAck);
 ```
 
 ```cpp
@@ -703,39 +705,48 @@ typedef boolean(_stdcall *FN_USR_OnUnSubscribeAck)(
 
 ```pascal
 { 自定义回调函数  }
-procedure UnSubAck_CBF(MessageID: Integer; DevId: PWideChar);
-var
-  vsHint            : string;
+procedure UnSubscribeAck_CBF(MessageID: LongInt;
+  UnSubFunName, UnSubParam: PWideChar);
 begin
-  vsHint := Format('取消订阅响应:' + Chr(13) + Chr(10) +
-    'MessageID:%d' + Chr(13) + Chr(10) +
-    '设备ID(或用户名):%s',
-    [MessageID, WideCharToString(DevId)]);
-  Writeln(vsHint);
+  FrmUsrCloudDllDemo.Log(
+      '【取消订阅事件】'#13#10 + 
+      'MessageID:%d'#13#10 +
+      '函数名称:%s'#13#10 + 
+      '设备ID(或用户名):%s',
+    [MessageID, 
+    WideCharToString(UnSubFunName), 
+    WideCharToString(UnSubParam)]);
 end;
 ```
 
 ```pascal
 { 注册回调函数 }
-USR_OnUnSubAck(UnSubAck_CBF);
+USR_OnUnSubscribeAck(UnSubscribeAck_CBF);
 ```
 
 ```csharp
 /* 自定义回调函数 */
-private void UnSubAck_CBF(int messageID, IntPtr devId)
+private void UnSubscribeAck_CBF(int messageID, 
+    IntPtr UnSubFunName, 
+    IntPtr UnSubParam)
 {
-    string sDevId = Marshal.PtrToStringAuto(devId);
-    Log("【取消订阅回调】");
+    string sUnSubFunName = Marshal.PtrToStringAuto(
+        UnSubFunName);
+    string sUnSubParam = Marshal.PtrToStringAuto(
+        UnSubParam);
+    Log("【取消订阅事件】");
     Log("MsgId:" + messageID.ToString());
-    Log("设备：" + sDevId);
+    Log("函数名称：" + sUnSubFunName);
+    Log("设备ID或用户名：" + sUnSubParam);
 }
 ```
 
 ```csharp
-TUSR_UnSubAckEvent FUnSubAck_CBF;
-FUnSubAck_CBF = new TUSR_UnSubAckEvent(UnSubAck_CBF);
+TUSR_UnSubscribeAckEvent FUnSubscribeAck_CBF;
+FUnSubscribeAck_CBF = new TUSR_UnSubscribeAckEvent(
+    UnSubscribeAck_CBF);
 /* 注册回调函数 */
-USR_OnUnSubAck(FUnSubAck_CBF);
+USR_OnUnSubscribeAck(FUnSubscribeAck_CBF);
 ```
 
 ```cpp
@@ -755,7 +766,8 @@ void CUsrCloudDllDemoDlg::UnSubscribeAck_CBF(
 
 /* 注册回调函数 */
 FN_USR_OnUnSubscribeAck USR_OnUnSubscribeAck;
-USR_OnUnSubscribeAck = (FN_USR_OnUnSubscribeAck)GetProcAddress(hUsrCloud, "USR_OnUnSubscribeAck");
+USR_OnUnSubscribeAck = (FN_USR_OnUnSubscribeAck)GetProcAddress(
+    hUsrCloud, "USR_OnUnSubscribeAck");
 USR_OnUnSubscribeAck(UnSubscribeAck_CBF);
 ```
 
