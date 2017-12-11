@@ -1490,7 +1490,7 @@ var
 begin
   viMsgId := USR_PublishParsedSetDataPoint(
       PWideChar('00000000000000000001'),
-      PWideChar('432'),
+      PWideChar('118'),
       PWideChar('1234')
       );
   if viMsgId > -1 then
@@ -1500,7 +1500,7 @@ end;
 
 ```csharp
 int iMsgId = USR_PublishParsedSetDataPoint(
-    "00000000000000000001", "432", "1234");
+    "00000000000000000001", "118", "1234");
 if (iMsgId > -1) 
 {
     Log("消息已推送 MsgId:" + iMsgId.ToString());
@@ -1570,7 +1570,7 @@ var
 begin
   viMsgId := USR_PublishParsedQueryDataPoint(
       PWideChar('00000000000000000001'),
-      PWideChar('432')
+      PWideChar('118')
       );
   if viMsgId > -1 then
     Writeln('消息已推送 MsgId:' + IntToStr(viMsgId));
@@ -1579,7 +1579,7 @@ end;
 
 ```csharp
 int iMsgId = USR_PublishParsedQueryDataPoint(
-    "00000000000000000001", "432");
+    "00000000000000000001", "118");
 if (iMsgId > -1) 
 {
     Log("消息已推送 MsgId:" + iMsgId.ToString());
