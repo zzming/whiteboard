@@ -8,8 +8,8 @@ language_tabs:
   - cpp
 
 toc_footers:
-  - 版本  :2.1.0
-  - 日期  :2017-12-7
+  - 版本  :2.1.1
+  - 日期  :2017-12-13
   - <a href='http://cloud.usr.cn'>有人透传云</a>
   - <style>.fwb{font-weight:bold;}</style>
   - <style>a{ text-decoration:none}</style>
@@ -1928,11 +1928,15 @@ USR_OnRcvParsedDataPointPush(RcvParsedDataPointPush_CBF);
 
 参数|描述
 ----|----
-OnRcvParsed |[in] 接收设备数据点值推送回调函数   [TUSR_RcvParsedEvent 定义](#Define_TUSR_RcvParsedEvent)<br>[JSON格式](#Define_Json_dataPoints)
+OnRcvParsed |[in] 接收设备数据点值推送回调函数   [TUSR_RcvParsedEvent 定义](#Define_TUSR_RcvParsedEvent)
 
 返回值| 描述
 ---- | ----
 boolean| 成功返回 true ,失败返回 false
+
+**说明:<br>**
+- 需执行<a href="#USR-SubscribeDevParsed-订阅单个设备解析后的数据" class="fwb">USR_SubscribeDevParsed</a> 订阅单个设备解析后的数据, 服务器才会推送该设备数据点值
+- 设备数据点值推送JSON数据格式见示例代码区
 
 ### <aside>USR_OnRcvParsedDevStatusPush 设置 接收设备上下线推送回调函数</aside>
 
@@ -2066,6 +2070,9 @@ OnRcvParsed |[in] 接收设备上下线推送回调函数   [TUSR_RcvParsedEvent
 ---- | ----
 boolean| 成功返回 true ,失败返回 false
 
+**说明:<br>**
+- 需执行<a href="#USR-SubscribeUserParsed-订阅账户下所有设备解析后的数据" class="fwb">USR_SubscribeUserParsed</a> 订阅账户下所有设备的解析后的数据, 服务器才会推送设备的上下载状态
+- 设备上下线推送JSON数据格式见示例代码区
 
 ### <aside>USR_OnRcvParsedDevAlarmPush 设置 接收设备报警推送回调函数</aside>
 
@@ -2207,6 +2214,9 @@ OnRcvParsed |[in] 接收设备报警推送回调函数   [TUSR_RcvParsedEvent �
 ---- | ----
 boolean| 成功返回 true ,失败返回 false
 
+**说明:<br>**
+- 需执行<a href="#USR-SubscribeUserParsed-订阅账户下所有设备解析后的数据" class="fwb">USR_SubscribeUserParsed</a> 订阅账户下所有设备的解析后的数据, 服务器才会推送设备报警
+- 设备报警推送JSON数据格式见示例代码区
 
 ### <aside>USR_OnRcvParsedOptionResponseReturn 设置 接收设备数据点操作应答回调函数</aside>
 
@@ -2343,7 +2353,13 @@ OnRcvParsed |[in] 接收设备数据点操作应答回调函数   [TUSR_RcvParse
 ---- | ----
 boolean| 成功返回 true ,失败返回 false
 
-#### <span id = "Define_TUSR_RcvParsedEvent"></span>
+**说明:<br>**
+- 需执行<a href="#USR-SubscribeUserParsed-订阅账户下所有设备解析后的数据" class="fwb">USR_SubscribeUserParsed</a> 订阅账户下所有设备的解析后的数据, 服务器才会推送数据点操作应答
+- 数据点操作应答JSON数据格式见示例代码区
+
+<br>
+
+<span id = "Define_TUSR_RcvParsedEvent"></span>
 **TUSR_RcvParsedEvent 定义**
 
 <br>
@@ -2493,6 +2509,11 @@ OnRcvRawFromDev |[in] 接收数据回调函数   [TUSR_RcvRawFromDevEvent 定义
 ---- | ----
 boolean| 成功返回 true ,失败返回 false
 
+**说明:<br>**
+- 需执行<a href="#USR-SubscribeDevRaw-订阅单个设备原始数据流" class="fwb">USR_SubscribeDevRaw</a> 订阅单个设备原始数据流, 或执行<a href="#USR-SubscribeUserRaw-订阅账户下所有设备原始数据流" class="fwb">USR_SubscribeUserRaw</a> 订阅账户下所有设备原始数据流, 才能收到原始数据流推送
+
+<br>
+
 <span id = "Define_TUSR_RcvRawFromDevEvent"></span>
 **TUSR_RcvRawFromDevEvent 定义**
 
@@ -2516,6 +2537,7 @@ DataLen|[out] 数据长度
 
 版本 | 日期 | 更新内容 | 更新人
 ---- | ---- | ---- | ----
-1.0.0 | 2017-7-26 | 初版 | 张振鸣
-<a href='old_1.0.1'><b>1.0.1</b></a> | 2017-8-8 | 修改USR_Publish一处提示| 张振鸣
+1.0.0 | 2017-07-26 | 初版 | 张振鸣
+<a href='old_1.0.1'><b>1.0.1</b></a> | 2017-08-08 | 修改USR_Publish一处提示| 张振鸣
 2.1.0 | 2017-12-07 | 1. 增加json格式数据协议<br>2. 增加相关函数,以解决子账号设备消息的订阅推送问题| 张振鸣
+2.1.1 | 2017-12-13 | 接收消息相关函数, 增加 “如何订阅, 才能收到消息” 的说明| 张振鸣
