@@ -8,8 +8,8 @@ language_tabs:
   - cpp
 
 toc_footers:
-  - 版本  :2.1.1
-  - 日期  :2017-12-13
+  - 版本  :2.1.2
+  - 日期  :2018-01-05
   - <a href='http://cloud.usr.cn'>有人透传云</a>
   - <style>.fwb{font-weight:bold;}</style>
   - <style>a{ text-decoration:none}</style>
@@ -18,6 +18,11 @@ search: true
 ---
 
 # 快速上手
+
+### DLL及DEMO下载
+
++ [**C++** demo](https://github.com/UsrIot/UsrCloudDllDemo_Cpp/releases/latest "跳转后, 点 Source code (zip) 即可下载")&emsp;&emsp;[**Delphi** demo](https://github.com/UsrIot/UsrCloudDllDemo_Delphi/releases/latest "跳转后, 点 Source code (zip) 即可下载")&emsp;&emsp;[**C#** demo](https://github.com/UsrIot/UsrCloudDllDemo_Csharp/releases/latest "跳转后, 点 Source code (zip) 即可下载")
++ [**DLL**](http://cloud.usr.cn/sdk/dll/res/UsrCloud.zip) <font color=#C0C0C0>（DLL已包含在以上各个demo中）</font>
 
 ### 函数调用流程
 
@@ -38,7 +43,7 @@ search: true
 
 &emsp;| 说明 | 举例
 ---- | ---- | ----
-  1  | 用户需要按照回调函数定义 , 自定义回调函数 | 按照 [ TUSR_ConnAckEvent 定义 ](#Define_TUSR_ConnAckEvent) , 写回调函数<br>ConnAck_CBF( long ReturnCode , LPCWSTR Description )<br>（参见右侧示例代码或 Demo ） 
+  1  | 用户需要按照回调函数定义 , 自定义回调函数 | 按照 [ TUSR_ConnAckEvent 定义 ](#Define_TUSR_ConnAckEvent) , 写回调函数<br>ConnAck_CBF( long ReturnCode , LPCWSTR Description )<br>（参见右侧示例代码或Demo）
   2  | 用dll提供的USR_OnXXXXXX方法 , 将回调函数地址传给dll | 执行  USR_OnConnAck(ConnAck_CBF)
   3  | 当事件发生时 , 会触发用户写的回调函数 | 执行 USR_Connect 连接服务器 , 会收到服务器的反馈 , 触发 ConnAck_CBF , 通过 ReturnCode 参数 , 可判断是否连接成功。
 
@@ -46,7 +51,7 @@ search: true
 
 ## 函数汇总
 
-<table border="1" frame=vsides bordercolor="#8FBCD4" align="center">    <tr>        <td colspan="2" align="center"><b>功能说明</b></td><td align="center"><b>云交换机</b>            <br>操作原始数据</td><td align="center"><b>云组态</b>            <br>操作解析后的数据</td>    </tr><tr>        <td rowspan="3" align="center">初始化和释放</td><td>获取版本号</td><td colspan="2" align="center"><a href="#USR-GetVer-获取dll版本" class="fwb">USR_GetVer</a></td>    </tr><tr>        <td>初始化</td><td colspan="2" align="center"><a href="#USR-Init-初始化接口" class="fwb">USR_Init</a></td>    </tr><tr>        <td>释放</td><td colspan="2" align="center"><a href="#USR-Release-释放接口" class="fwb">USR_Release</a></td>    </tr><tr>        <td rowspan="3" align="center">连接和断开</td><td>连接回调</td><td colspan="2" align="center"><a href="#USR-OnConnAck-设置-连接响应回调函数" class="fwb">USR_OnConnAck</a></td>    </tr><tr>        <td>连接</td><td colspan="2" align="center"><a href="#USR-Connect-连接" class="fwb">USR_Connect</a></td>    </tr><tr>        <td>断开</td><td colspan="2" align="center"><a href="#USR-DisConnect-断开连接" class="fwb">USR_DisConnect</a></td>    </tr><tr>        <td rowspan="6" align="center">订阅和取消订阅</td><td>订阅回调</td><td colspan="2" align="center"><a href="#USR-OnSubscribeAck-设置-订阅响应回调函数" class="fwb">USR_OnSubscribeAck</a></td>    </tr><tr>        <td>订阅设备数据</td><td align="center"><a href="#USR-SubscribeDevRaw-订阅单个设备原始数据流" class="fwb">USR_SubscribeDevRaw</a></td><td align="center"><a href="#USR-SubscribeDevParsed-订阅单个设备解析后的数据" class="fwb">USR_SubscribeDevParsed</a></td>    </tr><tr>        <td>订阅账户下所有设备数据</td><td align="center"><a href="#USR-SubscribeUserRaw-订阅账户下所有设备原始数据流" class="fwb">USR_SubscribeUserRaw</a></td><td align="center"><a href="#USR-SubscribeUserParsed-订阅账户下所有设备解析后的数据" class="fwb">USR_SubscribeUserParsed</a></td>    </tr><tr>        <td>取消订阅回调</td><td colspan="2" align="center"><a href="#USR-OnUnSubscribeAck-设置-取消订阅响应回调函数" class="fwb">USR_OnUnSubscribeAck</a></td>    </tr><tr>        <td>取消订阅设备数据</td><td align="center"><a href="#USR-UnSubscribeDevRaw-取消订阅单个设备原始数据流" class="fwb">USR_UnSubscribeDevRaw</a></td><td align="center"><a href="#USR-UnSubscribeDevParsed-取消订阅单个设备解析后的数据" class="fwb">USR_UnSubscribeDevParsed</a></td>    </tr><tr>        <td>取消订阅账户下所有设备数据</td><td align="center"><a href="#USR-UnSubscribeUserRaw-取消订阅账户下所有设备原始数据流" class="fwb">USR_UnSubscribeUserRaw</a></td><td align="center"><a href="#USR-UnSubscribeUserParsed-取消订阅账户下所有设备解析后的数据" class="fwb">USR_UnSubscribeUserParsed</a></td>    </tr><tr>        <td rowspan="2" align="center">推送数据</td><td>推送回调</td><td colspan="2" align="center"><a href="#USR-OnPubAck-设置-推送响应回调函数" class="fwb">USR_OnPubAck</a></td>    </tr><tr>        <td>推送数据</td><td align="center"><a href="#USR-PublishRawToDev-向单台设备推送原始数据流" class="fwb">USR_PublishRawToDev</a>            <br align="center"><a href="#USR-PublishRawToUser-向账户下所有设备推送原始数据流" class="fwb">USR_PublishRawToUser</a></td><td align="center"><a href="#USR-PublishParsedSetDataPoint-设置单台设备数据点值" class="fwb">USR_PublishParsedSetDataPoint</a>            <br align="center"><a href="#USR-PublishParsedQueryDataPoint-查询单台设备数据点值" class="fwb">USR_PublishParsedQueryDataPoint</a></td>    </tr><tr>        <td colspan="1" align="center">接收数据</td><td>接收数据</td><td align="center"><a href="#USR-OnRcvRawFromDev-设置-接收设备原始数据流回调函数" class="fwb">USR_OnRcvRawFromDev</a></td><td align="center"><a href="#USR-OnRcvParsedDataPointPush-设置-接收设备数据点值推送回调函数" class="fwb">USR_OnRcvParsedDataPointPush</a>            <br align="center"><a href="#USR-OnRcvParsedDevStatusPush-设置-接收设备上下线推送回调函数" class="fwb">USR_OnRcvParsedDevStatusPush</a>            <br align="center"><a href="#USR-OnRcvParsedDevAlarmPush-设置-接收设备报警推送回调函数" class="fwb">USR_OnRcvParsedDevAlarmPush</a>            <br align="center"><a href="#USR-OnRcvParsedOptionResponseReturn-设置-接收设备数据点操作应答回调函数" class="fwb">USR_OnRcvParsedOptionResponseReturn</a></td>    </tr></table>
+<table border="1" frame=vsides bordercolor="#8FBCD4" align="center">    <tr>        <td colspan="2" align="center"><b>功能说明</b></td><td align="center"><b>云交换机</b>            <br>操作原始数据</td><td align="center"><b>云组态</b>            <br>操作解析后的数据</td>    </tr><tr>        <td rowspan="3" align="center">初始化和释放</td><td>获取版本号</td><td colspan="2" align="center"><a href="#USR-GetVer-获取dll版本" class="fwb">USR_GetVer</a></td>    </tr><tr>        <td>初始化</td><td colspan="2" align="center"><a href="#USR-Init-初始化接口" class="fwb">USR_Init</a></td>    </tr><tr>        <td>释放</td><td colspan="2" align="center"><a href="#USR-Release-释放接口" class="fwb">USR_Release</a></td>    </tr><tr>        <td rowspan="3" align="center">连接和断开</td><td>连接回调</td><td colspan="2" align="center"><a href="#USR-OnConnAck-设置-连接响应回调函数" class="fwb">USR_OnConnAck</a></td>    </tr><tr>        <td>连接</td><td colspan="2" align="center"><a href="#USR-Connect-连接" class="fwb">USR_Connect</a></td>    </tr><tr>        <td>断开</td><td colspan="2" align="center"><a href="#USR-DisConnect-断开连接" class="fwb">USR_DisConnect</a></td>    </tr><tr>        <td rowspan="6" align="center">订阅和取消订阅</td><td>订阅回调</td><td colspan="2" align="center"><a href="#USR-OnSubscribeAck-设置-订阅响应回调函数" class="fwb">USR_OnSubscribeAck</a></td>    </tr><tr>        <td>订阅设备数据</td><td align="center"><a href="#USR-SubscribeDevRaw-订阅单个设备原始数据流" class="fwb">USR_SubscribeDevRaw</a></td><td align="center"><a href="#USR-SubscribeDevParsed-订阅单个设备解析后的数据" class="fwb">USR_SubscribeDevParsed</a></td>    </tr><tr>        <td>订阅账户下所有设备数据</td><td align="center"><a href="#USR-SubscribeUserRaw-订阅账户下所有设备原始数据流" class="fwb">USR_SubscribeUserRaw</a></td><td align="center"><a href="#USR-SubscribeUserParsed-订阅账户下所有设备解析后的数据" class="fwb">USR_SubscribeUserParsed</a></td>    </tr><tr>        <td>取消订阅回调</td><td colspan="2" align="center"><a href="#USR-OnUnSubscribeAck-设置-取消订阅响应回调函数" class="fwb">USR_OnUnSubscribeAck</a></td>    </tr><tr>        <td>取消订阅设备数据</td><td align="center"><a href="#USR-UnSubscribeDevRaw-取消订阅单个设备原始数据流" class="fwb">USR_UnSubscribeDevRaw</a></td><td align="center"><a href="#USR-UnSubscribeDevParsed-取消订阅单个设备解析后的数据" class="fwb">USR_UnSubscribeDevParsed</a></td>    </tr><tr>        <td>取消订阅账户下所有设备数据</td><td align="center"><a href="#USR-UnSubscribeUserRaw-取消订阅账户下所有设备原始数据流" class="fwb">USR_UnSubscribeUserRaw</a></td><td align="center"><a href="#USR-UnSubscribeUserParsed-取消订阅账户下所有设备解析后的数据" class="fwb">USR_UnSubscribeUserParsed</a></td>    </tr><tr>        <td rowspan="2" align="center">推送数据</td><td>推送回调</td><td colspan="2" align="center"><a href="#USR-OnPubAck-设置-推送响应回调函数" class="fwb">USR_OnPubAck</a></td>    </tr><tr>        <td>推送数据</td><td align="center"><a href="#USR-PublishRawToDev-向单台设备推送原始数据流" class="fwb">USR_PublishRawToDev</a>            <br align="center"><a href="#USR-PublishRawToUser-向账户下所有设备推送原始数据流" class="fwb">USR_PublishRawToUser</a></td><td align="center"><a href="#USR-PublishParsedSetSlaveDataPoint-设置数据点值" class="fwb">USR_PublishParsedSetSlaveDataPoint</a>            <br align="center"><a href="#USR-PublishParsedQuerySlaveDataPoint-查询数据点值" class="fwb">USR_PublishParsedQuerySlaveDataPoint</a></td>    </tr><tr>        <td colspan="1" align="center">接收数据</td><td>接收数据</td><td align="center"><a href="#USR-OnRcvRawFromDev-设置-接收设备原始数据流回调函数" class="fwb">USR_OnRcvRawFromDev</a></td><td align="center"><a href="#USR-OnRcvParsedDataPointPush-设置-接收数据点值推送回调函数" class="fwb">USR_OnRcvParsedDataPointPush</a>            <br align="center"><a href="#USR-OnRcvParsedDevStatusPush-设置-接收设备上下线推送回调函数" class="fwb">USR_OnRcvParsedDevStatusPush</a>            <br align="center"><a href="#USR-OnRcvParsedDevAlarmPush-设置-接收设备报警推送回调函数" class="fwb">USR_OnRcvParsedDevAlarmPush</a>            <br align="center"><a href="#USR-OnRcvParsedOptionResponseReturn-设置-接收数据点操作应答回调函数" class="fwb">USR_OnRcvParsedOptionResponseReturn</a></td>    </tr></table>
 
 ## --------- 初始化和释放 ---------
 
@@ -361,10 +366,6 @@ boolean| 成功返回 true ,失败返回 false
 ----|----
 ReturnCode |[in] 返回码
 Description|[in] 返回码代表的含义
-
-返回值|描述
-----|----
-boolean|成功返回 true ,失败返回 false
 
 可能的返回码如下:
 
@@ -868,7 +869,7 @@ DevId|[in] 设备ID。指定要订阅哪个设备发来的消息。<br>**如果�
 
 返回值| 描述
 ---- | ----
-boolean|失败返回: -1 ;<br>成功返回: 消息ID,收到消息ID只是说明消息发到服务器上去了,最终订阅结果要通过USR_OnSubscribeAck设置的回调函数来判断。
+long |失败返回: -1 ;<br>成功返回: 消息ID,收到消息ID只是说明消息发到服务器上去了,最终订阅结果要通过USR_OnSubscribeAck设置的回调函数来判断。
 
 ### <aside>USR_SubscribeUserParsed 订阅账户下所有设备解析后的数据</aside>
 
@@ -935,7 +936,7 @@ Username|[in] 用户名。指定要订阅哪个用户的设备发来的消息。
 
 返回值| 描述
 ---- | ----
-boolean|失败返回: -1 ;<br>成功返回: 消息ID,收到消息ID只是说明消息发到服务器上去了,最终订阅结果要通过USR_OnSubscribeAck设置的回调函数来判断。
+long |失败返回: -1 ;<br>成功返回: 消息ID,收到消息ID只是说明消息发到服务器上去了,最终订阅结果要通过USR_OnSubscribeAck设置的回调函数来判断。
 
 
 ### <aside>USR_UnSubscribeDevParsed 取消订阅单个设备解析后的数据</aside>
@@ -1004,7 +1005,7 @@ DevId|[in] 设备ID。指定要取消订阅哪个设备发来的消息。<br>**�
 
 返回值| 描述
 ---- | ----
-boolean|失败返回: -1 ;<br>成功返回: 消息ID,收到消息ID只是说明消息发到服务器上去了,最终取消订阅结果要通过USR_OnUnSubscribeAck设置的回调函数来判断。
+long |失败返回: -1 ;<br>成功返回: 消息ID,收到消息ID只是说明消息发到服务器上去了,最终取消订阅结果要通过USR_OnUnSubscribeAck设置的回调函数来判断。
 
 ### <aside>USR_UnSubscribeUserParsed 取消订阅账户下所有设备解析后的数据</aside>
 
@@ -1072,7 +1073,7 @@ Username|[in] 用户名。指定要取消订阅哪个用户的设备发来的消
 
 返回值| 描述
 ---- | ----
-boolean|失败返回: -1 ;<br>成功返回: 消息ID,收到消息ID只是说明消息发到服务器上去了,最终取消订阅结果要通过USR_OnUnSubscribeAck设置的回调函数来判断。
+long |失败返回: -1 ;<br>成功返回: 消息ID,收到消息ID只是说明消息发到服务器上去了,最终取消订阅结果要通过USR_OnUnSubscribeAck设置的回调函数来判断。
 
 ### --------- 云交换机操作 ---------
 
@@ -1142,7 +1143,7 @@ DevId|[in] 设备ID。指定要订阅哪个设备发来的消息。<br>**如果�
 
 返回值| 描述
 ---- | ----
-boolean|失败返回: -1 ;<br>成功返回: 消息ID,收到消息ID只是说明消息发到服务器上去了,最终订阅结果要通过USR_OnSubscribeAck设置的回调函数来判断。
+long |失败返回: -1 ;<br>成功返回: 消息ID,收到消息ID只是说明消息发到服务器上去了,最终订阅结果要通过USR_OnSubscribeAck设置的回调函数来判断。
 
 ### <aside>USR_SubscribeUserRaw 订阅账户下所有设备原始数据流</aside>
 
@@ -1211,7 +1212,7 @@ Username|[in] 用户名。指定要订阅哪个用户的设备发来的消息。
 
 返回值| 描述
 ---- | ----
-boolean|失败返回: -1 ;<br>成功返回: 消息ID,收到消息ID只是说明消息发到服务器上去了,最终订阅结果要通过USR_OnSubscribeAck设置的回调函数来判断。
+long |失败返回: -1 ;<br>成功返回: 消息ID,收到消息ID只是说明消息发到服务器上去了,最终订阅结果要通过USR_OnSubscribeAck设置的回调函数来判断。
 
 
 ### <aside>USR_UnSubscribeDevRaw 取消订阅单个设备原始数据流</aside>
@@ -1280,7 +1281,7 @@ DevId|[in] 设备ID。指定要取消订阅哪个设备发来的消息。<br>**�
 
 返回值| 描述
 ---- | ----
-boolean|失败返回: -1 ;<br>成功返回: 消息ID,收到消息ID只是说明消息发到服务器上去了,最终取消订阅结果要通过USR_OnUnSubscribeAck设置的回调函数来判断。
+long |失败返回: -1 ;<br>成功返回: 消息ID,收到消息ID只是说明消息发到服务器上去了,最终取消订阅结果要通过USR_OnUnSubscribeAck设置的回调函数来判断。
 
 ### <aside>USR_UnSubscribeUserRaw 取消订阅账户下所有设备原始数据流</aside>
 
@@ -1349,7 +1350,7 @@ Username|[in] 用户名。指定要取消订阅哪个用户的设备发来的消
 
 返回值| 描述
 ---- | ----
-boolean|失败返回: -1 ;<br>成功返回: 消息ID,收到消息ID只是说明消息发到服务器上去了,最终取消订阅结果要通过USR_OnUnSubscribeAck设置的回调函数来判断。
+long |失败返回: -1 ;<br>成功返回: 消息ID,收到消息ID只是说明消息发到服务器上去了,最终取消订阅结果要通过USR_OnUnSubscribeAck设置的回调函数来判断。
 
 ## --------- 推送消息 ---------
 
@@ -1460,26 +1461,26 @@ MessageID |[out] 消息ID。用于判断推送的哪条消息得到服务器的�
 
 ### --------- 云组态操作 ---------
 
-### <aside>USR_PublishParsedSetDataPoint 设置单台设备数据点值</aside>
+### <aside>USR_PublishParsedSetSlaveDataPoint 设置数据点值</aside>
 
-> USR_PublishParsedSetDataPoint 设置单台设备数据点值 声明:
+> USR_PublishParsedSetSlaveDataPoint 设置数据点值 声明:
 
 ```pascal
-function USR_PublishParsedSetDataPoint(DevId, PointId, Value: PWideChar):
+function USR_PublishParsedSetSlaveDataPoint(DevId, SlaveIndex, PointId, Value: PWideChar):
   LongInt; stdcall; external 'UsrCloud.dll';
 ```
 
 ```csharp
 [DllImport("UsrCloud.dll", CharSet = CharSet.Auto, 
-    EntryPoint = "USR_PublishParsedSetDataPoint", 
+    EntryPoint = "USR_PublishParsedSetSlaveDataPoint", 
     CallingConvention = CallingConvention.StdCall)]
-public static extern int USR_PublishParsedSetDataPoint(
-    string DevId, string PointId, string Value);
+public static extern int USR_PublishParsedSetSlaveDataPoint(
+    string DevId, string SlaveIndex, string PointId, string Value);
 ```
 
 ```cpp
-typedef long(_stdcall *FN_USR_PublishParsedSetDataPoint)(
-    LPCWSTR DevId, LPCWSTR PointId, LPCWSTR Value);
+typedef long(_stdcall *FN_USR_PublishParsedSetSlaveDataPoint)(
+    LPCWSTR DevId, LPCWSTR SlaveIndex, LPCWSTR PointId, LPCWSTR Value);
 ```
 
 > 调用
@@ -1488,8 +1489,9 @@ typedef long(_stdcall *FN_USR_PublishParsedSetDataPoint)(
 var
   viMsgId           : Integer;
 begin
-  viMsgId := USR_PublishParsedSetDataPoint(
+  viMsgId := USR_PublishParsedSetSlaveDataPoint(
       PWideChar('00000000000000000001'),
+      PWideChar('1'),
       PWideChar('118'),
       PWideChar('1234')
       );
@@ -1499,8 +1501,8 @@ end;
 ```
 
 ```csharp
-int iMsgId = USR_PublishParsedSetDataPoint(
-    "00000000000000000001", "118", "1234");
+int iMsgId = USR_PublishParsedSetSlaveDataPoint(
+    "00000000000000000001", "1", "118", "1234");
 if (iMsgId > -1) 
 {
     Log("消息已推送 MsgId:" + iMsgId.ToString());
@@ -1508,58 +1510,61 @@ if (iMsgId > -1)
 ```
 
 ```cpp
-FN_USR_PublishParsedSetDataPoint USR_PublishParsedSetDataPoint;
-USR_PublishParsedSetDataPoint = (FN_USR_PublishParsedSetDataPoint)GetProcAddress(
-    hUsrCloud, "USR_PublishParsedSetDataPoint");
+FN_USR_PublishParsedSetSlaveDataPoint USR_PublishParsedSetSlaveDataPoint;
+USR_PublishParsedSetSlaveDataPoint = (FN_USR_PublishParsedSetSlaveDataPoint)GetProcAddress(
+    hUsrCloud, "USR_PublishParsedSetSlaveDataPoint");
 
-CString sDevId, sPointId, sValue;
+CString sDevId, sSlaveIndex, sPointId, sValue;
 m_Edit_PubParsedDevId.GetWindowTextW(sDevId);
+m_Edit_PubParsedSlaveIndex.GetWindowTextW(sSlaveIndex);
 m_Edit_PubParsedPointId.GetWindowTextW(sPointId);
 m_Edit_PubParsedValueS.GetWindowTextW(sValue);
 LPCWSTR DevId = (LPCWSTR)sDevId;
+LPCWSTR SlaveIndex = (LPCWSTR)sSlaveIndex;
 LPCWSTR PointId = (LPCWSTR)sPointId;
 LPCWSTR Value = (LPCWSTR)sValue;
-long iMsgId = USR_PublishParsedSetDataPoint(
-    DevId, PointId, Value);
+long iMsgId = USR_PublishParsedSetSlaveDataPoint(
+    DevId, SlaveIndex, PointId, Value);
 CString str;
 str.Format(_T("消息已推送\n MsgId:%d\n"), iMsgId); 
 ```
 
 <br>
 
-**函数原型:<br><br>`long USR_PublishParsedSetDataPoint(LPCWSTR DevId, LPCWSTR PointId, LPCWSTR Value);`**
+**函数原型:<br><br>`long USR_PublishParsedSetSlaveDataPoint(LPCWSTR DevId, LPCWSTR SlaveIndex, LPCWSTR PointId, LPCWSTR Value);`**
 
 参数| 描述
 ---- | ----
 DevId  | [in] 设备ID,指定要把数据发给哪个设备, **只能填一个。**
+SlaveIndex | [in] 从机序号
 PointId | [in] 数据点ID
 Value | [in] 数据点值
 
 返回值| 描述
 ---- | ----
-boolean|失败返回: -1 ;<br>成功返回: 消息ID。
+long |失败返回: -1 ;<br>成功返回: 消息ID。
 
-### <aside>USR_PublishParsedQueryDataPoint 查询单台设备数据点值</aside>
+### <aside>USR_PublishParsedQuerySlaveDataPoint 查询数据点值</aside>
 
-> USR_PublishParsedQueryDataPoint 查询单台设备数据点值 声明:
+> USR_PublishParsedQuerySlaveDataPoint 查询数据点值 声明:
 
 ```pascal
-function USR_PublishParsedQueryDataPoint(
-    DevId, PointId: PWideChar): LongInt; 
+function USR_PublishParsedQuerySlaveDataPoint(
+    DevId, SlaveIndex, PointId: PWideChar): LongInt; 
 stdcall; external 'UsrCloud.dll';
 ```
 
 ```csharp
 [DllImport("UsrCloud.dll", CharSet = CharSet.Auto, 
-    EntryPoint = "USR_PublishParsedQueryDataPoint", 
+    EntryPoint = "USR_PublishParsedQuerySlaveDataPoint", 
     CallingConvention = CallingConvention.StdCall)]
-public static extern int USR_PublishParsedQueryDataPoint(
-    string DevId, string PointId);
+public static extern int USR_PublishParsedQuerySlaveDataPoint(
+    string DevId, string SlaveIndex, string PointId);
 ```
 
 ```cpp
-typedef long(_stdcall *FN_USR_PublishParsedQueryDataPoint)(
-    LPCWSTR DevId, LPCWSTR PointId);
+typedef long(_stdcall *FN_USR_PublishParsedQuerySlaveDataPoint)(
+    LPCWSTR DevId, LPCWSTR SlaveIndex, LPCWSTR PointId);
 ```
 
 > 调用
@@ -1568,8 +1573,9 @@ typedef long(_stdcall *FN_USR_PublishParsedQueryDataPoint)(
 var
   viMsgId           : Integer;
 begin
-  viMsgId := USR_PublishParsedQueryDataPoint(
+  viMsgId := USR_PublishParsedQuerySlaveDataPoint(
       PWideChar('00000000000000000001'),
+      PWideChar('1'),
       PWideChar('118')
       );
   if viMsgId > -1 then
@@ -1578,8 +1584,8 @@ end;
 ```
 
 ```csharp
-int iMsgId = USR_PublishParsedQueryDataPoint(
-    "00000000000000000001", "118");
+int iMsgId = USR_PublishParsedQuerySlaveDataPoint(
+    "00000000000000000001", "1", "118");
 if (iMsgId > -1) 
 {
     Log("消息已推送 MsgId:" + iMsgId.ToString());
@@ -1587,33 +1593,36 @@ if (iMsgId > -1)
 ```
 
 ```cpp
-FN_USR_PublishParsedQueryDataPoint USR_PublishParsedQueryDataPoint;
-USR_PublishParsedQueryDataPoint = (FN_USR_PublishParsedQueryDataPoint)GetProcAddress(
-    hUsrCloud, "USR_PublishParsedQueryDataPoint");
+FN_USR_PublishParsedQuerySlaveDataPoint USR_PublishParsedQuerySlaveDataPoint;
+USR_PublishParsedQuerySlaveDataPoint = (FN_USR_PublishParsedQuerySlaveDataPoint)GetProcAddress(
+    hUsrCloud, "USR_PublishParsedQuerySlaveDataPoint");
 
-CString sDevId, sPointId;
+CString sDevId, sSlaveIndex, sPointId;
 m_Edit_PubParsedDevId.GetWindowTextW(sDevId);
+m_Edit_PubParsedSlaveIndex.GetWindowTextW(sSlaveIndex);
 m_Edit_PubParsedPointId.GetWindowTextW(sPointId);
 LPCWSTR DevId = (LPCWSTR)sDevId;
+LPCWSTR SlaveIndex = (LPCWSTR)sSlaveIndex;
 LPCWSTR PointId = (LPCWSTR)sPointId;
-long iMsgId = USR_PublishParsedQueryDataPoint(
-    DevId, PointId);
+long iMsgId = USR_PublishParsedQuerySlaveDataPoint(
+    DevId, SlaveIndex, PointId);
 CString str;
 str.Format(_T("消息已推送\n MsgId:%d\n"), iMsgId);
 ```
 
 <br>
 
-**函数原型:<br><br>`long USR_PublishParsedQueryDataPoint(LPCWSTR DevId, LPCWSTR PointId);`**
+**函数原型:<br><br>`long USR_PublishParsedQuerySlaveDataPoint(LPCWSTR DevId, LPCWSTR SlaveIndex, LPCWSTR PointId);`**
 
 参数| 描述
 ---- | ----
 DevId  | [in] 设备ID,指定要把数据发给哪个设备, **只能填一个。**
+SlaveIndex | [in] 从机序号
 PointId | [in] 数据点ID
 
 返回值| 描述
 ---- | ----
-boolean|失败返回: -1 ;<br>成功返回: 消息ID。
+long |失败返回: -1 ;<br>成功返回: 消息ID。
 
 ### --------- 云交换机操作 ---------
 
@@ -1704,7 +1713,7 @@ DataLen | [in] 数据长度
 
 返回值| 描述
 ---- | ----
-boolean|失败返回: -1 ;<br>成功返回: 消息ID。
+long |失败返回: -1 ;<br>成功返回: 消息ID。
 
 ### <aside>USR_PublishRawToUser 向账户下所有设备推送原始数据流</aside>
 
@@ -1793,15 +1802,15 @@ DataLen | [in] 数据长度
 
 返回值| 描述
 ---- | ----
-boolean|失败返回: -1 ;<br>成功返回: 消息ID。
+long |失败返回: -1 ;<br>成功返回: 消息ID。
 
 ## --------- 接收消息 ---------
 
 ### --------- 云组态操作 ---------
 
-### <aside>USR_OnRcvParsedDataPointPush 设置 接收设备数据点值推送回调函数</aside>
+### <aside>USR_OnRcvParsedDataPointPush 设置 接收数据点值推送回调函数</aside>
 
-> USR_OnRcvParsedDataPointPush 设置 接收设备数据点值推送回调函数 声明:
+> USR_OnRcvParsedDataPointPush 设置 接收数据点值推送回调函数 声明:
 
 ```pascal
 TUSR_RcvParsedEvent = procedure(
@@ -1845,7 +1854,7 @@ var
   vsHint : string;
 begin
   vsHint := Format(
-    '【设备数据点值推送事件】' + Chr(13) + Chr(10) +
+    '【数据点值推送事件】' + Chr(13) + Chr(10) +
     'MessageID:%d' + Chr(13) + Chr(10) +
     '设备ID:%s' + Chr(13) + Chr(10) +
     'JSON数据:%s',
@@ -1870,7 +1879,7 @@ private void RcvParsedDataPointPush_CBF(
 {
     string sDevId = Marshal.PtrToStringAuto(DevId);
     string sJsonStr = Marshal.PtrToStringAuto(JsonStr);
-    Log("【设备数据点值推送事件】");
+    Log("【数据点值推送事件】");
     Log("设备ID   : " + sDevId);
     Log("MsgId    : " + messageID.ToString());
     Log("JSON数据: " + sJsonStr);
@@ -1896,7 +1905,7 @@ void CUsrCloudDllDemoDlg::RcvParsedDataPointPush_CBF(
 {
 	CString str;
 	str.Format(
-        _T("【接收设备数据点推送事件】\n MessageID：%d\n DevId：%s\n JsonStr：%s\n"), 
+        _T("【接收数据点推送事件】\n MessageID：%d\n DevId：%s\n JsonStr：%s\n"), 
         MessageID, DevId, JsonStr);
 	((CUsrCloudDllDemoDlg*)theApp.GetMainWnd())->AppendLog(str);
 }
@@ -1909,13 +1918,15 @@ USR_OnRcvParsedDataPointPush = (FN_USR_OnRcvParsedDataPointPush)GetProcAddress(
 USR_OnRcvParsedDataPointPush(RcvParsedDataPointPush_CBF);
 ```
 
-> 设备数据点值推送 JSON数据格式
+> 数据点值推送 JSON数据格式
 
     {
         "dataPoints": [
             {
-                "pointId": "123", //数据点 id
-                "value":"42.12" //数据点值（整形/浮点/布尔型）
+                "slaveIndex":"1",            //数据点所属从机序号
+                "slaveAddr":"112233445566",  //数据点所属从机地址
+                "pointId": "123",            //数据点 id
+                "value":"42.12"              //数据点值（整形/浮点/布尔型）
             },
             {………}
         ],
@@ -1928,15 +1939,15 @@ USR_OnRcvParsedDataPointPush(RcvParsedDataPointPush_CBF);
 
 参数|描述
 ----|----
-OnRcvParsed |[in] 接收设备数据点值推送回调函数   [TUSR_RcvParsedEvent 定义](#Define_TUSR_RcvParsedEvent)
+OnRcvParsed |[in] 接收数据点值推送回调函数   [TUSR_RcvParsedEvent 定义](#Define_TUSR_RcvParsedEvent)
 
 返回值| 描述
 ---- | ----
 boolean| 成功返回 true ,失败返回 false
 
 **说明:<br>**
-- 需执行<a href="#USR-SubscribeDevParsed-订阅单个设备解析后的数据" class="fwb">USR_SubscribeDevParsed</a> 订阅单个设备解析后的数据, 服务器才会推送该设备数据点值
-- 设备数据点值推送JSON数据格式见示例代码区
+- 需执行<a href="#USR-SubscribeDevParsed-订阅单个设备解析后的数据" class="fwb">USR_SubscribeDevParsed</a> 订阅单个设备解析后的数据, 服务器才会推送该数据点值
+- 数据点值推送JSON数据格式见示例代码区
 
 ### <aside>USR_OnRcvParsedDevStatusPush 设置 接收设备上下线推送回调函数</aside>
 
@@ -2189,7 +2200,7 @@ USR_OnRcvParsedDevAlarmPush(RcvParsedDevAlarmPush_CBF);
     {
         "devAlarm": {
             "devName":"123",
-            " pointId":"123", //数据点 id
+            "pointId":"123", //数据点 id
             "dataName":"温度", //数据点名称
             "value":"12.11", //触发报警值
             "alarmValue":"12.00", //设定的报警值
@@ -2218,11 +2229,11 @@ boolean| 成功返回 true ,失败返回 false
 - 需执行<a href="#USR-SubscribeUserParsed-订阅账户下所有设备解析后的数据" class="fwb">USR_SubscribeUserParsed</a> 订阅账户下所有设备的解析后的数据, 服务器才会推送设备报警
 - 设备报警推送JSON数据格式见示例代码区
 
-### <aside>USR_OnRcvParsedOptionResponseReturn 设置 接收设备数据点操作应答回调函数</aside>
+### <aside>USR_OnRcvParsedOptionResponseReturn 设置 接收数据点操作应答回调函数</aside>
 
-用 USR_PublishParsedSetDataPoint 设置设备数据点值时，返回的操作结果（目前只用于 COAP类型的设备，并且设备作为 modbus 主机）。
+用 USR_PublishParsedSetSlaveDataPoint 设置数据点值时，返回的操作结果（目前只用于 COAP类型的设备，并且设备作为 modbus 主机）。
 
-> USR_OnRcvParsedOptionResponseReturn 设置 接收设备数据点操作应答回调函数 声明:
+> USR_OnRcvParsedOptionResponseReturn 设置 接收数据点操作应答回调函数 声明:
 
 ```pascal
 TUSR_RcvParsedEvent = procedure(
@@ -2266,7 +2277,7 @@ var
   vsHint : string;
 begin
   vsHint := Format(
-    '【设备数据点操作应答事件】' + Chr(13) + Chr(10) +
+    '【数据点操作应答事件】' + Chr(13) + Chr(10) +
     'MessageID:%d' + Chr(13) + Chr(10) +
     '设备ID:%s' + Chr(13) + Chr(10) +
     'JSON数据:%s',
@@ -2290,7 +2301,7 @@ private void RcvParsedOptionResponseReturn_CBF(
 {
     string sDevId = Marshal.PtrToStringAuto(DevId);
     string sJsonStr = Marshal.PtrToStringAuto(JsonStr);
-    Log("【设备数据点操作应答事件】");
+    Log("【数据点操作应答事件】");
     Log("设备ID   : " + sDevId);
     Log("MsgId    : " + messageID.ToString());
     Log("JSON数据: " + sJsonStr);
@@ -2315,7 +2326,7 @@ void CUsrCloudDllDemoDlg::RcvParsedOptionResponseReturn_CBF(
 {
 	CString str;
 	str.Format(
-        _T("【接收设备数据点操作应答事件】\n MessageID：%d\n DevId：%s\n JsonStr：%s\n"),
+        _T("【接收数据点操作应答事件】\n MessageID：%d\n DevId：%s\n JsonStr：%s\n"),
          MessageID, DevId, JsonStr);
 	((CUsrCloudDllDemoDlg*)theApp.GetMainWnd())->AppendLog(str);
 }
@@ -2333,9 +2344,11 @@ USR_OnRcvParsedOptionResponseReturn(RcvParsedOptionResponseReturn_CBF);
     {
         "optionResponse": [
             {
-                "result":"1", //1 操作成功 0 代表不成功
-                "dataId":"100",//数据点,如果是透传那么该字段为空
-                "option":"1" //1.数据处于待发送状态 2.数据已发送
+            "result":"1",               //1 操作成功 0 代表不成功
+            "slaveIndex":"1",           //数据点所属从机序号
+            "slaveAddr":"112233445566", //数据点所属从机地址
+            "pointId":"100",            //数据点id,如果是透传那么该字段为空
+            "option":"1"                //1.数据处于待发送状态 2.数据已发送
             }
         ],
         "devName":"123"
@@ -2347,7 +2360,7 @@ USR_OnRcvParsedOptionResponseReturn(RcvParsedOptionResponseReturn_CBF);
 
 参数|描述
 ----|----
-OnRcvParsed |[in] 接收设备数据点操作应答回调函数   [TUSR_RcvParsedEvent 定义](#Define_TUSR_RcvParsedEvent)
+OnRcvParsed |[in] 接收数据点操作应答回调函数   [TUSR_RcvParsedEvent 定义](#Define_TUSR_RcvParsedEvent)
 
 返回值| 描述
 ---- | ----
@@ -2540,4 +2553,5 @@ DataLen|[out] 数据长度
 1.0.0 | 2017-07-26 | 初版 | 张振鸣
 <a href='old_1.0.1'><b>1.0.1</b></a> | 2017-08-08 | 修改USR_Publish一处提示| 张振鸣
 2.1.0 | 2017-12-07 | 1. 增加json格式数据协议<br>2. 增加相关函数,以解决子账号设备消息的订阅推送问题| 张振鸣
-2.1.1 | 2017-12-13 | 接收消息相关函数, 增加 “如何订阅, 才能收到消息” 的说明| 张振鸣
+<a href='old_2.1.1'><b>2.1.1</b></a> | 2017-12-13 | 接收消息相关函数, 增加 “如何订阅, 才能收到消息” 的说明| 张振鸣
+2.1.2 | 2018-01-05 | 1.增加两个函数:<br>USR_PublishParsedSetSlaveDataPoint<br>USR_PublishParsedQuerySlaveDataPoint<br>替换掉两个函数:<br>USR_PublishParsedSetDataPoint<br>USR_PublishParsedQueryDataPoin<br>2.修改JSON数据| 张振鸣
